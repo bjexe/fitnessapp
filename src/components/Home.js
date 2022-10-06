@@ -59,7 +59,17 @@ export default function Home(){
         return newData;
 
       });
-
+    } else if (name === "finish") {
+      console.log("toggling data.finished")
+      setData((oldData) => {
+        let newData = [...oldData];
+        for(let i = 0; i < newData.length; i++) {
+          if(newData[i].id === id) {
+            newData[i].finished = !newData[i].finished;
+          }
+        }
+        return newData;
+      });
     }
     
   }

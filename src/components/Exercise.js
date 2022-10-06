@@ -10,20 +10,20 @@ export default function Exercise( {data, setData, handleClick} ){
                 <p>{`Set #${index+1}:`}</p>
                 <p>{set.weight} lbs</p>
                 <p>{set.reps} reps</p>
-                <button onClick={handleClick} name="del" id={set.id}>Delete set</button>
+                {!data.finished && <button onClick={handleClick} name="del" id={set.id}>Delete set</button>}
             </div>
         )
     })
 
     return(
-        <div className='exercise-container'>
+        <div className='exercise-container' style={{backgroundColor: data.finished ? 'lime' : 'white'}}>
             <div className='exercise-body'>
                 <span>
                     <p className='exercise-title'>{`${data.name}`}</p>
-                    <button onClick={handleClick} id={data.id} name="add">Add a new set</button>
+                    {!data.finished && <button onClick={handleClick} id={data.id} name="add">Add a new set</button>}
                 </span>
                 {sets}
-                <button onClick={handleClick} id={data.id} name="finish">Finish exercise</button>
+                <button onClick={handleClick} id={data.id} name={"finish"}>{!data.finished ? "Finish" : "Edit exercise"}</button>
             </div>
         </div>
     );

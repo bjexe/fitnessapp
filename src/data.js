@@ -4,6 +4,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Bench Press",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
@@ -40,6 +41,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Lateral Raises",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
@@ -76,6 +78,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Incline Bench Press",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
@@ -112,6 +115,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Tricep Pushdowns",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
@@ -148,6 +152,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Pec Deck Machine",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
@@ -184,6 +189,7 @@ const data = [
     {
       id: uuidv4(),
       name: "Overhead Press",
+      finished: false,
       sets: [
         {
           id: uuidv4(),
