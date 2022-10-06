@@ -1,10 +1,10 @@
 import './App.css';
-import Home from './components/Home'
+import Workout from './components/Workout'
 import LandingPage from './components/LandingPage'
 import React from 'react';
 
 function App() {
-  return <Home/>
+  return <Workout/>
   //return <LandingPage/>
 }
 
