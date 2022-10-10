@@ -1,15 +1,18 @@
 import React from 'react'
 import Exercise from './Exercise'
-import dataApiMimic from '../data'
 import {v4 as uuidv4} from 'uuid'
 
-export default function Home(){
+export default function Workout({workoutData}){
 
-  const [data, setData] = React.useState(dataApiMimic);
+  const [data, setData] = React.useState(workoutData);
 
   const exerciseDisplays = data.map((entry) => {
       return <Exercise data={entry} key={entry.id} setData={setData} handleClick={handleClick}/>
   })
+
+  function submitWorkout() {
+    // todo: save workout to database and close the workout screen
+  }
 
   function handleClick(event) {
 
@@ -79,6 +82,7 @@ export default function Home(){
           <div className='exercises-container'>
               {exerciseDisplays}
           </div>
+          <button onClick={submitWorkout}>Finish workout</button>
       </div>
   );
 

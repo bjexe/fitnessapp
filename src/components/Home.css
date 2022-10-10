@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+body{
+    margin: 0;
+}
+
+.home-nav {
+    font-family: 'Anton', sans-serif;
+    font-size: 70px;
+    padding-left: 5px;
+    border-bottom: 5px solid;
+    
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.recent-workouts {
+    width: 100%;
+    border-left: 2px solid black;
+    padding: 25px;
+}
