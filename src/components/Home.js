@@ -4,6 +4,7 @@ import workoutSummaryData from '../workoutSummaryData'
 import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import './Home.css'
+import { v4 as uuidv4 } from 'uuid'
 
 Modal.setAppElement('#root');
 
@@ -15,15 +16,24 @@ const modalStyles = {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
+      width: '80%',
+      height: '100vh',
+      overflowy: 'scroll',
     },
-  };
+};
+
+const buttonStyle = {
+    height: '100px'
+}
 
 export default function Home() {
-
+    // states
     const [showModal, setShowModal] = React.useState(false);
     const [showWorkoutModal, setShowWorkoutModal] = React.useState(false);
+    const [showTemplatesModal, setShowTemplatesModal] = React.useState(false);
     const [templateFormData, setTemplateFormData] = React.useState([
         {
+            id: uuidv4(),
             exercise: '',
             numSets: 1,
             sets: [
@@ -35,9 +45,11 @@ export default function Home() {
         }
     ]);
 
-    let subtitle;
+    // welcome to one line function city
 
-    function openModal() {
+    // functions for creating a workout template
+
+    function openTemplateModal() {
         setShowModal(true);
     }
 
@@ -45,70 +57,77 @@ export default function Home() {
         setShowModal(false);
     }
 
-    function afterOpenModal() {
+    function afterOpenTemplateModal() {
         //do something
-    }
-
-    function openWorkoutModal() {
-        setShowWorkoutModal(true);
-    }
-
-
-
-    // eventually add date and time here
-    const recentWorkouts = workoutSummaryData.map((workout) => {
-        return (
-            <>
-                <hr />
-                <div onClick={openWorkoutModal}>
-                    <p style={{fontsize: "100px"}}>{workout.title}</p>
-                    <p>{workout.exercises} Exercises</p>
-                </div>
-                
-            </>
-        )
-    });
-
-    const buttonStyle = {
-        height: '100px'
-    }
-
-    function createTemplate() {
-        //toggleModal();
     }
 
     function addTemplateSet() {
 
     }
 
-    /* 
-    Home screen should contain the following things:
-        
-        - start a new workout
-            - from template
-            - empty workout
-        
-        - workout templates
-            - create new template     
-            - start workout from template
+    // functions for viewing 'recent workouts', will be implemented when database is up and this app has access to it through an API
+    function openWorkoutModal() {
+        setShowWorkoutModal(true);
+    }
 
-        - account management
+    function afterOpenWorkoutModal() {
+        console.log("workout modal opened");
+    }
 
-    */
+    function closeWorkoutModal () {
+        setShowWorkoutModal(false);
+    }
+
+    //functions for starting workouts
+    function openWorkoutTemplateModal() {
+        setShowTemplatesModal(true);
+    }
+
+    function closeWorkoutTemplateModal() {
+        setShowTemplatesModal(false);
+    }
+
+    const recentWorkouts = workoutSummaryData.map((workout) => {
+        return (
+            <>
+                <hr />
+
+                <div onClick={openWorkoutModal}>
+                    <p style={{fontsize: "100px"}}>{workout.title}</p>
+                    <p>{workout.exercises} Exercises</p>
+                </div>
+
+                <Modal
+                    isOpen={showWorkoutModal}
+                    onAfterOpen={afterOpenWorkoutModal}
+                    onRequestClose={closeWorkoutModal}
+                    style={modalStyles}
+                    contentLabel = "show recent workouts"
+                >
+                    <Workout workoutData={workoutData} />
+                </Modal>
+            </>
+        );
+    });
+
     return (
         <div className='home'>
+
             <nav className='home-nav'>
                 Yacked!
                 <img src='../images/logo-small.jpg' alt='logo-small' style={{width: "100px"}}/>
             </nav>
+
             <div className='content'>
                 <div className='menu'>
-                    <button onClick={openModal} name="create-template" style={buttonStyle}>
+
+                    <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
+
                     <Modal
                         isOpen={showModal}
-                        onAfterOpen={afterOpenModal}
+                        onAfterOpen={afterOpenTemplateModal}
                         onRequestClose={closeModal}
                         style={modalStyles}
                         contentLabel = "create a new template"
@@ -118,19 +137,36 @@ export default function Home() {
                             <button type="button" onClick={addTemplateSet}>Add an exercise</button>
                         </form>
                     </Modal>
-                    <button onClick={createTemplate} name="startTemplate" style={buttonStyle}>
+
+                    <button onClick={openWorkoutTemplateModal} name="startTemplate" style={buttonStyle}>
                         Start workout from template
                     </button>
-                    <button style = {buttonStyle} onClick={createTemplate} name="startEmpty">
+
+                    {/* Later, include the exercises present in these templates */}
+                    <Modal
+                        isOpen={showTemplatesModal}
+                        onRequestClose={closeWorkoutTemplateModal}
+                        style={modalStyles}
+                        contentLabel = "create a new template"
+                    >
+                        <h2>Select a template to begin</h2>
+                        <button>Push</button>
+                        <button>Pull</button>
+                        <button>Leg</button>
+                    </Modal>
+
+                    <button style = {buttonStyle} onClick={openWorkoutModal} name="startEmpty">
                         Start empty workout
                     </button>
+
                 </div>
+
                 <div className='recent-workouts'>
                     <h1>Recent Workouts</h1>
                     {recentWorkouts}
                 </div>
+
             </div>
         </div>
-    )
-
+    );
 }
