@@ -2,12 +2,12 @@ import React from 'react'
 import Exercise from './Exercise'
 import {v4 as uuidv4} from 'uuid'
 
-export default function Workout({workoutData}){
+export default function Workout({workoutData, active}){
 
   const [data, setData] = React.useState(workoutData);
 
   const exerciseDisplays = data.map((entry) => {
-      return <Exercise data={entry} key={entry.id} setData={setData} handleClick={handleClick}/>
+      return <Exercise data={entry} key={entry.id} setData={setData} handleClick={handleClick} active={active}/>
   })
 
   function submitWorkout() {
@@ -82,7 +82,7 @@ export default function Workout({workoutData}){
           <div className='exercises-container'>
               {exerciseDisplays}
           </div>
-          <button onClick={submitWorkout}>Finish workout</button>
+          {active && <button onClick={submitWorkout}>Finish workout</button>}
       </div>
   );
 

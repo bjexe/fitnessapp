@@ -2,7 +2,7 @@ import './Exercise.css'
 import React from 'react'
 import {v4 as uuidv4} from 'uuid'
 
-export default function Exercise( {data, setData, handleClick} ){
+export default function Exercise( {data, setData, handleClick, active} ){
 
     const sets = data.sets.map((set, index) => {
         return (
@@ -10,7 +10,7 @@ export default function Exercise( {data, setData, handleClick} ){
                 <p>{`Set #${index+1}:`}</p>
                 <p>{set.weight} lbs</p>
                 <p>{set.reps} reps</p>
-                {!data.finished && <button onClick={handleClick} name="del" id={set.id}>Delete set</button>}
+                {!data.finished && active && <button onClick={handleClick} name="del" id={set.id}>Delete set</button>}
             </div>
         )
     })
@@ -20,10 +20,10 @@ export default function Exercise( {data, setData, handleClick} ){
             <div className='exercise-body'>
                 <span>
                     <p className='exercise-title'>{`${data.name}`}</p>
-                    {!data.finished && <button onClick={handleClick} id={data.id} name="add">Add a new set</button>}
+                    {!data.finished && active && <button onClick={handleClick} id={data.id} name="add">Add a new set</button>}
                 </span>
                 {sets}
-                <button onClick={handleClick} id={data.id} name={"finish"}>{!data.finished ? "Finish" : "Edit exercise"}</button>
+                {active && <button onClick={handleClick} id={data.id} name={"finish"}>{!data.finished ? "Finish" : "Edit exercise"}</button>}
             </div>
         </div>
     );
