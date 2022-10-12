@@ -20,7 +20,7 @@ export default function Exercise( {data, setData, handleClick, active} ){
             <div className='exercise-body'>
                 <span>
                     <p className='exercise-title'>{`${data.name}`}</p>
-                    {!data.finished && active && <button onClick={handleClick} id={data.id} name="add">Add a new set</button>}
+                    {!data.finished && active && <button onClick={handleClick} id={data.id} name="addSet">Add a new set</button>}
                 </span>
                 {sets}
                 {active && <button onClick={handleClick} id={data.id} name={"finish"}>{!data.finished ? "Finish" : "Edit exercise"}</button>}

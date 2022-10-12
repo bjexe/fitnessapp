@@ -34,14 +34,7 @@ export default function Home() {
     const [templateFormData, setTemplateFormData] = React.useState([
         {
             id: uuidv4(),
-            exercise: '',
-            numSets: 1,
-            sets: [
-                {
-                    reps: 0,
-                    weight: 0
-                }
-            ]
+            sets: [ {} ]
         }
     ]);
 
@@ -63,6 +56,13 @@ export default function Home() {
 
     function addTemplateSet() {
 
+    }
+
+    function handleFormChange(event){
+        const {name, value, type} = event.target;
+        let newState = [...templateFormData];
+        
+        setTemplateFormData(newState);
     }
 
     // functions for viewing 'recent workouts', will be implemented when database is up and this app has access to it through an API
@@ -104,7 +104,7 @@ export default function Home() {
                     style={modalStyles}
                     contentLabel = "show recent workouts"
                 >
-                    <Workout workoutData={workoutData} />
+                    <Workout workoutData={workoutData} active={false}/>
                 </Modal>
             </>
         );
@@ -133,7 +133,7 @@ export default function Home() {
                         contentLabel = "create a new template"
                     >
                         <form>
-                            <input name="templateName" placeholder="Name of template"/>
+                            <input name="templateName" placeholder="Name of template" value = {templateFormData.templateName} onChange={handleFormChange}/>
                             <button type="button" onClick={addTemplateSet}>Add an exercise</button>
                         </form>
                     </Modal>

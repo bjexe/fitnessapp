@@ -40,7 +40,20 @@ export default function Workout({workoutData, active}){
 
         return newData;
       });
-    } else if (name === "add") {
+    } else if (name === "addExercise"){
+
+      setData((oldData) => {
+
+        return [...oldData, { //make this an empty exercise when things are editable
+          id: uuidv4(),
+          name: "New Exercise",
+          finished: false,
+          sets: []
+        }];
+
+      });
+
+    } else if (name === "addSet") {
 
       console.log("attempting to add a set...")
 
@@ -83,6 +96,7 @@ export default function Workout({workoutData, active}){
               {exerciseDisplays}
           </div>
           {active && <button onClick={submitWorkout}>Finish workout</button>}
+          {active && <button onClick={handleClick} name={"addExercise"}>Add an exercise</button>}
       </div>
   );
 
