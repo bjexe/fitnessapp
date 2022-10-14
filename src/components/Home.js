@@ -55,14 +55,20 @@ export default function Home() {
     }
 
     function handleFormChange(event){
-        const {name, value, type} = event.target;
-        console.log(value)
+        const {name, value, id} = event.target;
         setTemplateFormData(oldForm => {
             let newForm = {...oldForm};
-            //if (name === "templateName"){
+            if (name === "templateName"){
                 newForm.name = value;
                 return newForm;
-            //}
+            } else if (name === "exerciseName") {
+                for(let i = 0; i < newForm.exercises.length; i++) {
+                    if(newForm.exercises[i].id === id){
+                        newForm.exercises[i].name = value;
+                    }
+                }
+                return newForm;
+            }
         });
     }
 
@@ -71,12 +77,14 @@ export default function Home() {
             let newForm = {...oldForm};
             newForm.exercises.push({
                 id: uuidv4(),
+                name: "",
                 sets: [{
                     id: uuidv4(),
                     weight: 0,
                     reps: 0
                 }]
             })
+            return newForm;
         })
     }
 
@@ -98,13 +106,12 @@ export default function Home() {
         setShowTemplatesModal(false);
     }
 
-    // renders that are volatile
-
+    // renders that change depending on data
     const formInputs = templateFormData.exercises.map((exercise) => { // need: a form for each exercise to add a certain amount of sets with default values
         return(
             <>
-                <input type="text" name="exercise" id={exercise.id} />
-                <button>Add a set</button>
+                <input name="exerciseName" id={exercise.id} value={exercise.name} onChange={handleFormChange}/>
+                <button onClick={(e) => e.preventDefault()}>Add a set</button>
             </>
         );
     })
@@ -155,6 +162,7 @@ export default function Home() {
                         <form>
                             <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
                             <button type="button" onClick={addExercise}>Add an exercise</button>
+                            {formInputs}
                         </form>
                     </Modal>
 
