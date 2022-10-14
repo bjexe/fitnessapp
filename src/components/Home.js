@@ -31,17 +31,21 @@ export default function Home() {
     const [showModal, setShowModal] = React.useState(false);
     const [showWorkoutModal, setShowWorkoutModal] = React.useState(false);
     const [showTemplatesModal, setShowTemplatesModal] = React.useState(false);
-    const [templateFormData, setTemplateFormData] = React.useState([
-        {
+    const [templateFormData, setTemplateFormData] = React.useState({
+        name: "",
+        id: uuidv4(),
+        exercises: [{
             id: uuidv4(),
-            sets: [ {} ]
-        }
-    ]);
-
-    // welcome to one line function city
+            name: "",
+            sets: [{
+                id: uuidv4(),
+                weight: 0,
+                reps: 0
+            }],
+        }]
+    });
 
     // functions for creating a workout template
-
     function openTemplateModal() {
         setShowModal(true);
     }
@@ -50,28 +54,35 @@ export default function Home() {
         setShowModal(false);
     }
 
-    function afterOpenTemplateModal() {
-        //do something
-    }
-
-    function addTemplateSet() {
-
-    }
-
     function handleFormChange(event){
         const {name, value, type} = event.target;
-        let newState = [...templateFormData];
-        
-        setTemplateFormData(newState);
+        console.log(value)
+        setTemplateFormData(oldForm => {
+            let newForm = {...oldForm};
+            //if (name === "templateName"){
+                newForm.name = value;
+                return newForm;
+            //}
+        });
+    }
+
+    function addExercise() {
+        setTemplateFormData(oldForm => {
+            let newForm = {...oldForm};
+            newForm.exercises.push({
+                id: uuidv4(),
+                sets: [{
+                    id: uuidv4(),
+                    weight: 0,
+                    reps: 0
+                }]
+            })
+        })
     }
 
     // functions for viewing 'recent workouts', will be implemented when database is up and this app has access to it through an API
     function openWorkoutModal() {
         setShowWorkoutModal(true);
-    }
-
-    function afterOpenWorkoutModal() {
-        console.log("workout modal opened");
     }
 
     function closeWorkoutModal () {
@@ -87,6 +98,17 @@ export default function Home() {
         setShowTemplatesModal(false);
     }
 
+    // renders that are volatile
+
+    const formInputs = templateFormData.exercises.map((exercise) => { // need: a form for each exercise to add a certain amount of sets with default values
+        return(
+            <>
+                <input type="text" name="exercise" id={exercise.id} />
+                <button>Add a set</button>
+            </>
+        );
+    })
+
     const recentWorkouts = workoutSummaryData.map((workout) => {
         return (
             <>
@@ -99,7 +121,6 @@ export default function Home() {
 
                 <Modal
                     isOpen={showWorkoutModal}
-                    onAfterOpen={afterOpenWorkoutModal}
                     onRequestClose={closeWorkoutModal}
                     style={modalStyles}
                     contentLabel = "show recent workouts"
@@ -127,14 +148,13 @@ export default function Home() {
 
                     <Modal
                         isOpen={showModal}
-                        onAfterOpen={afterOpenTemplateModal}
                         onRequestClose={closeModal}
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
                         <form>
-                            <input name="templateName" placeholder="Name of template" value = {templateFormData.templateName} onChange={handleFormChange}/>
-                            <button type="button" onClick={addTemplateSet}>Add an exercise</button>
+                            <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
+                            <button type="button" onClick={addExercise}>Add an exercise</button>
                         </form>
                     </Modal>
 

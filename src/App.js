@@ -6,8 +6,8 @@ import Home from './components/Home'
 import React from 'react';
 
 function App() {
-  return <Workout active={true} workoutData={exampleWorkoutData}/>
-  //return <Home/>
+  //return <Workout active={true} workoutData={exampleWorkoutData}/>
+  return <Home/>
   //return <LandingPage/>
 }
 
