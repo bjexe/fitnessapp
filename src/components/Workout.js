@@ -18,33 +18,24 @@ export default function Workout({workoutData, active}){
 
     const {name, id} = event.target;
     
-    if(name === "del"){
+    if(name === "deleteSet"){
 
       setData((oldData) => {
 
-        let newData = [...oldData]; // state arrays result in React not re-rendering when a value of the state array changes, this fixes it (pointers I suppose)
-  
-        for(let i = 0; i < newData.length; i++) { // loop through the old data until the right exercise containing the targeted set to delete is found
-          
-          let sets = newData[i].sets; 
+        let newData = [...oldData]; // state arrays result in React not re-rendering when a value of the state array changes, this fixes it
 
-          for(let j = 0; j < sets.length; j++) {
+        let indexOfExercise = newData.indexOf(newData.find(entry => entry.sets.find(set => set.id === id))); // find index of exercise containing the set
 
-            if(sets[j].id === id){
-              newData[i].sets.splice(j, 1); // delete the set from the array
-            }
+        let indexOfSet = newData[indexOfExercise].sets.indexOf(newData[indexOfExercise].sets.find(set => set.id === id)); // find index of set within found exercise
 
-          }
-
-        }
-
+        newData[indexOfExercise].sets.splice(indexOfSet, 1); // delete the set
         return newData;
       });
     } else if (name === "addExercise"){
 
       setData((oldData) => {
 
-        return [...oldData, { //make this an empty exercise when things are editable
+        return [...oldData, {
           id: uuidv4(),
           name: "New Exercise",
           finished: false,
@@ -61,29 +52,20 @@ export default function Workout({workoutData, active}){
         
         let newData = [...oldData];
 
-        for(let i = 0; i < newData.length; i++) {
-          if(newData[i].id === id) {
-            newData[i].sets.push({
-              id: uuidv4(),
-              weight: 0,
-              reps: 0,
-              comment: ""
-            });
-          }
-        }
+        newData.find(entry => entry.id === id).sets.push({
+          id: uuidv4(),
+          weight: 0,
+          reps: 0,
+          comment: ""
+        });
 
         return newData;
 
       });
     } else if (name === "finish") {
-      console.log("toggling data.finished")
       setData((oldData) => {
         let newData = [...oldData];
-        for(let i = 0; i < newData.length; i++) {
-          if(newData[i].id === id) {
-            newData[i].finished = !newData[i].finished;
-          }
-        }
+        newData.find(entry => entry.id === id).finished = !newData.find(entry => entry.id === id).finished;
         return newData;
       });
     }

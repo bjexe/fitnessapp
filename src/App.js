@@ -1,5 +1,5 @@
 import './App.css';
-//import LandingPage from './components/LandingPage'
+import LandingPage from './components/LandingPage'
 import Workout from './components/Workout';
 import exampleWorkoutData from './exampleWorkoutData'
 import Home from './components/Home'

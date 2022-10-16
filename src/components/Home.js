@@ -55,20 +55,17 @@ export default function Home() {
     }
 
     function handleFormChange(event){
+
         const {name, value, id} = event.target;
+
         setTemplateFormData(oldForm => {
             let newForm = {...oldForm};
             if (name === "templateName"){
                 newForm.name = value;
-                return newForm;
             } else if (name === "exerciseName") {
-                for(let i = 0; i < newForm.exercises.length; i++) {
-                    if(newForm.exercises[i].id === id){
-                        newForm.exercises[i].name = value;
-                    }
-                }
-                return newForm;
+                newForm.exercises.find(exercise => exercise.id === id).name = value;
             }
+            return newForm;
         });
     }
 

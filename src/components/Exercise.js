@@ -10,7 +10,7 @@ export default function Exercise( {data, setData, handleClick, active} ){
                 <p>{`Set #${index+1}:`}</p>
                 <p>{set.weight} lbs</p>
                 <p>{set.reps} reps</p>
-                {!data.finished && active && <button onClick={handleClick} name="del" id={set.id}>Delete set</button>}
+                {!data.finished && active && <button onClick={handleClick} name="deleteSet" id={set.id}>Delete set</button>}
             </div>
         )
     })
