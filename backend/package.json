@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "fitness app backend",
+  "main": "index.js",
+  "scripts": {
+    "build:ui": "rm -rf build && cd ../frontend/ && npm run build && cp -r build ../backend",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "deploy": "/home/ben/.fly/bin/fly deploy",
+    "logs:prod": "/home/ben/.fly/bin/fly logs",
+    "deploy:full": "npm run build:ui && npm run deploy"
+  },
+  "keywords": [
+    "fitness"
+  ],
+  "author": "Benjamin Simms",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "mongoose": "^6.7.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}

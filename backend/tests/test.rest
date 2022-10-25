@@ -1,0 +1,78 @@
+POST http://localhost:3001/api/workouts HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "testing",
+    "exercises": [
+    {
+        "name": "bench press",
+        "sets": [
+            {
+                "weight": 1,
+                "reps": 1,
+                "comment": "first set"
+            },
+            {
+                "weight": 2,
+                "reps": 2,
+                "comment": "second set"
+            },
+            {
+                "weight": 3,
+                "reps": 3,
+                "comment": "third set"
+            }
+        ]
+    },
+    {
+        "name": "overhead press",
+        "sets": [
+            {
+                "weight": 1,
+                "reps": 1,
+                "comment": "first set"
+            },
+            {
+                "weight": 2,
+                "reps": 2,
+                "comment": "second set"
+            },
+            {
+                "weight": 3,
+                "reps": 3,
+                "comment": "third set"
+            }
+        ]
+    },
+    {
+        "name": "tricep press",
+        "sets": [
+            {
+                "weight": 1,
+                "reps": 1,
+                "comment": "first set"
+            },
+            {
+                "weight": 2,
+                "reps": 2,
+                "comment": "second set"
+            },
+            {
+                "weight": 3,
+                "reps": 3,
+                "comment": "third set"
+            }
+        ]
+    }
+    ]
+}
+
+###
+
+POST http://localhost:3001/api/workouts HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "test",
+    "exercises": "test exe"
+}
