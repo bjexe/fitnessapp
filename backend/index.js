@@ -1,10 +1,12 @@
 require('dotenv').config()
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
 app.use(cors())
 app.use(express.static('build')) //for showing front-end
 app.use(express.json())
+
 const mongoose = require('mongoose')
 const url = process.env.MONGODB_URI
 
@@ -105,6 +107,15 @@ const workoutSchema = new mongoose.Schema({
     date: Date,
     exercises: [exerciseSchema]
 })
+
+workoutSchema.set('toJSON', {
+    transform: (doc, returnedObj) => {
+        returnedObj.id = returnedObj._id.toString()
+        delete returnedObj._id
+        delete returnedObj.__v
+    }
+})
+
 const Workout = new mongoose.model("Workout", workoutSchema)
 
 // get all workouts
@@ -112,6 +123,13 @@ app.get(`/api/workouts`, (request, response) => {
     Workout.find({}).then(workouts => {
         response.json(workouts)
     }).catch(err => console.log(err))
+})
+
+//get all workouts associated with a specific user
+app.get(`/api/workouts/:userId`, (request, response) => {
+    Workout.find(userId = request.params.userId).then(workouts => {
+        response.json(workouts)
+    })
 })
 
 // get specific workout by id
@@ -142,6 +160,24 @@ app.post(`/api/workouts`, (request, response) => {
     workout.save().then(saved => {
         response.json(saved)
     })
+})
+
+// account api --------------------------------------------
+const userSchema = new mongoose.Schema({
+    workouts: [workoutSchema]
+})
+
+// create an account
+app.post(`/api/users`, (request, response) => {
+    const user = new User()
+    user.save().then(savedUser => { //perhaps research a different implementation here
+        response.json(savedUser)
+    })
+})
+
+// delete an account
+app.delete(`/api/users/:userId`, (request, response) => {
+    User.findByIdAndRemove(request.params.userId).then(response.status(204)).catch(err => console.log(err))
 })
 
 const PORT = process.env.PORT
