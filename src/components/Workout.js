@@ -6,68 +6,55 @@ export default function Workout({workoutData, active}){
 
   const [data, setData] = React.useState(workoutData);
 
-  const exerciseDisplays = data.map((entry) => {
-      return <Exercise data={entry} key={entry.id} setData={setData} handleClick={handleClick} active={active}/>
+  const exerciseDisplays = data.map((entry, index) => {
+      return <Exercise data={entry} key={uuidv4()} setData={setData} handleClick={handleClick} active={active} exerciseIndex={index}/>
   })
 
   function submitWorkout() {
     // todo: save workout to database and close the workout screen
   }
 
-  function handleClick(event) {
+  function handleClick(event, exerciseIndex, setIndex) {
 
-    const {name, id} = event.target;
+    const {name} = event.target;
     
     if(name === "deleteSet"){
-
       setData((oldData) => {
-
-        let newData = [...oldData]; // state arrays result in React not re-rendering when a value of the state array changes, this fixes it
-
-        let indexOfExercise = newData.indexOf(newData.find(entry => entry.sets.find(set => set.id === id))); // find index of exercise containing the set
-
-        let indexOfSet = newData[indexOfExercise].sets.indexOf(newData[indexOfExercise].sets.find(set => set.id === id)); // find index of set within found exercise
-
-        newData[indexOfExercise].sets.splice(indexOfSet, 1); // delete the set
-        return newData;
+        let newData = [...oldData] // state arrays result in React not re-rendering when a value of the state array changes, this fixes it
+        newData[exerciseIndex].sets.splice(setIndex, 1) // delete the set
+        return newData
       });
     } else if (name === "addExercise"){
 
       setData((oldData) => {
-
         return [...oldData, {
-          id: uuidv4(),
           name: "New Exercise",
           finished: false,
           sets: []
         }];
-
       });
 
     } else if (name === "addSet") {
 
-      console.log("attempting to add a set...")
-
       setData((oldData) => {
         
-        let newData = [...oldData];
+        let newData = [...oldData]
 
-        newData.find(entry => entry.id === id).sets.push({
-          id: uuidv4(),
+        newData[exerciseIndex].sets.push({
           weight: 0,
           reps: 0,
           comment: ""
         });
 
-        return newData;
+        return newData
 
       });
     } else if (name === "finish") {
       setData((oldData) => {
-        let newData = [...oldData];
-        newData.find(entry => entry.id === id).finished = !newData.find(entry => entry.id === id).finished;
-        return newData;
-      });
+        let newData = [...oldData]
+        newData[exerciseIndex].finished = !newData[exerciseIndex].finished
+        return newData
+      })
     }
     
   }

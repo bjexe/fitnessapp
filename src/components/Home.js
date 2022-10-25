@@ -4,7 +4,6 @@ import workoutSummaryData from '../workoutSummaryData'
 import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import './Home.css'
-import { v4 as uuidv4 } from 'uuid'
 
 Modal.setAppElement('#root');
 
@@ -33,12 +32,9 @@ export default function Home() {
     const [showTemplatesModal, setShowTemplatesModal] = React.useState(false);
     const [templateFormData, setTemplateFormData] = React.useState({
         name: "",
-        id: uuidv4(),
         exercises: [{
-            id: uuidv4(),
             name: "",
             sets: [{
-                id: uuidv4(),
                 weight: 0,
                 reps: 0
             }],
@@ -54,16 +50,16 @@ export default function Home() {
         setShowModal(false);
     }
 
-    function handleFormChange(event){
+    function handleFormChange(event, index){
 
-        const {name, value, id} = event.target;
+        const {name, value} = event.target;
 
         setTemplateFormData(oldForm => {
             let newForm = {...oldForm};
             if (name === "templateName"){
                 newForm.name = value;
             } else if (name === "exerciseName") {
-                newForm.exercises.find(exercise => exercise.id === id).name = value;
+                newForm.exercises[index].name = value
             }
             return newForm;
         });
@@ -73,10 +69,8 @@ export default function Home() {
         setTemplateFormData(oldForm => {
             let newForm = {...oldForm};
             newForm.exercises.push({
-                id: uuidv4(),
                 name: "",
                 sets: [{
-                    id: uuidv4(),
                     weight: 0,
                     reps: 0
                 }]
@@ -104,12 +98,12 @@ export default function Home() {
     }
 
     // renders that change depending on data
-    const formInputs = templateFormData.exercises.map((exercise) => { // need: a form for each exercise to add a certain amount of sets with default values
+    const formInputs = templateFormData.exercises.map((exercise, index) => { // need: a form for each exercise to add a certain amount of sets with default values
         return(
-            <>
-                <input name="exerciseName" id={exercise.id} value={exercise.name} onChange={handleFormChange}/>
+            <div key={index}>
+                <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
                 <button onClick={(e) => e.preventDefault()}>Add a set</button>
-            </>
+            </div>
         );
     })
 
