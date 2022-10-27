@@ -1,5 +1,5 @@
 const templatesRouter = require('express').Router()
-const Template = require('./models/template')
+const Template = require('../models/template')
 
 // getting all templates
 templatesRouter.get(`/`, (request, response) => {

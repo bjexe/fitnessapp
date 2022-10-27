@@ -2,7 +2,11 @@ const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+
 const workoutsRouter = require('./controllers/workouts')
+const templatesRouter = require('./controllers/templates')
+const usersRouter = require('./controllers/accounts')
+
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
@@ -17,12 +21,14 @@ mongoose.connect(config.MONGODB_URI)
         logger.error(`error connecting to database: ${err.message}`)
     })
 
-app.use(cors)
+app.use(cors())
 app.use(express.static('build'))
-app.use(express.json)
+app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.use('/api/workouts', workoutsRouter)
+app.use('/api/templates', templatesRouter)
+app.use('/api/users', usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const exerciseSchema = require('./schemas/exercise')
 
 const templateSchema = new mongoose.Schema({
     name: String,

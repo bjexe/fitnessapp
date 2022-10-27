@@ -1,6 +1,7 @@
 const workoutsRouter = require('express').Router()
 const Workout = require('../models/workout')
 
+// get all workouts
 workoutsRouter.get(`/`, (request, response) => {
     Workout.find({}).then(workouts => {
         response.json(workouts)
