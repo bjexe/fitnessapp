@@ -1,0 +1,53 @@
+POST http://localhost:3001/api/templates
+Content-Type: application/json
+
+{
+    "userId": "636162197f1a8d2793e31f65",
+    "name": "Push",
+    "favorite": true,
+    "exercises": [
+        {
+            "name": "Bench Press",
+            "sets": [
+                {
+                    "weight": 70,
+                    "reps": 5,
+                    "comment": "This sucked!"
+                },
+                {
+                    "weight": 60,
+                    "reps": 5,
+                    "comment": "This rocked!"
+                }
+            ]
+        },
+        {
+            "name": "Overhead Press",
+            "sets": [
+                {
+                    "weight": 10,
+                    "reps": 5,
+                    "comment": "This was ok!"
+                },
+                {
+                    "weight": 20,
+                    "reps": 5,
+                    "comment": "This hurt!"
+                }
+            ]
+        }
+    ]
+}
+
+###
+
+GET http://localhost:3001/api/templates
+
+### 
+
+DELETE http://localhost:3001/api/templates/test
+Content-Type: application/json
+
+{
+    "userId": "636162197f1a8d2793e31f65"
+}

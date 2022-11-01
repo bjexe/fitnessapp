@@ -13,7 +13,7 @@ const templateSchema = new mongoose.Schema({
 
 templateSchema.set('toJSON', {
     transform: (doc, returnedObj) => {
-        returnedObj.id = returnedObj.id.toString()
+        returnedObj.id = returnedObj._id.toString()
         delete returnedObj._id
         delete returnedObj.__v
     }
