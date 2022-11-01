@@ -3,6 +3,7 @@ const exerciseSchema = require('./exercise')
 
 const workoutSchema = new mongoose.Schema({
     date: Date,
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     exercises: [exerciseSchema]
 })
 

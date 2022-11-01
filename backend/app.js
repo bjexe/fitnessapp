@@ -5,7 +5,7 @@ const cors = require('cors')
 
 const workoutsRouter = require('./controllers/workouts')
 const templatesRouter = require('./controllers/templates')
-const usersRouter = require('./controllers/accounts')
+const usersRouter = require('./controllers/users')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')

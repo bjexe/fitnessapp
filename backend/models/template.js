@@ -2,8 +2,12 @@ const mongoose = require('mongoose')
 const exerciseSchema = require('./schemas/exercise')
 
 const templateSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     name: String,
-    finished: Boolean,
+    favorite: Boolean,
     exercises: [exerciseSchema]
 })
 
