@@ -1,6 +1,8 @@
 const workoutsRouter = require('express').Router()
 const Workout = require('../models/workout')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const {getTokenFrom} = require('../utils/auth')
 
 // get all workouts
 workoutsRouter.get(`/`, (request, response) => {
@@ -33,6 +35,13 @@ workoutsRouter.get(`/:id`, (request, response) => {
 // submitting a new workout
 workoutsRouter.post(`/`, async (request, response) => {
     const {userId, exercises} = request.body
+
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "Token is either invalid or missing"})
+    }
+
     if(!exercises) {
         return response.status(400).send({error: "workout must include some form of exercises"})
     }
@@ -41,7 +50,7 @@ workoutsRouter.post(`/`, async (request, response) => {
         user: userId,
         exercises: body.exercises
     })
-    const user = User.findById(userId)
+    const user = User.findById(decodedToken.id)
     const savedWorkout = await workout.save()
     user.workouts = user.workouts.concat(savedWorkout._id)
     await user.save()

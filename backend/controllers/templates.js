@@ -1,6 +1,8 @@
 const templatesRouter = require('express').Router()
 const Template = require('../models/template')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const {getTokenFrom} = require('../utils/auth')
 
 // getting all templates
 templatesRouter.get(`/`, async (request, response) => {
@@ -82,8 +84,15 @@ templatesRouter.post(`/`, async (request, response) => {
     if(!body.exercises){
         return response.status(400).json({error: "empty exercises"})
     }
+    
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "token is either invalid or missing"})
+    }
 
-    const user = await User.findById(body.userId)
+    const user = await User.findById(decodedToken.id)
     const template = new Template({
         name: body.name,
         finished: body.finished,
