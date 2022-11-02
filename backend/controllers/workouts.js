@@ -43,7 +43,8 @@ workoutsRouter.post(`/`, async (request, response) => {
     })
     const user = User.findById(userId)
     const savedWorkout = await workout.save()
-    user.workouts = await user.workouts.concat(savedWorkout._id)
+    user.workouts = user.workouts.concat(savedWorkout._id)
+    await user.save()
     response.json(savedWorkout)
 })
 
