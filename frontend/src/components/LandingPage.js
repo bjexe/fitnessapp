@@ -1,9 +1,11 @@
 import React from 'react'
 import './LandingPage.css'
+import register from '../services/register'
+import login from '../services/login'
 
 export default function LandingPage(){
 
-    const [formData, setFormData] = React.useState(
+    const [registerFormData, setRegisterFormData] = React.useState(
         {
             username: "",
             password: "",
@@ -12,9 +14,24 @@ export default function LandingPage(){
         }
     );
 
+    const [registerError, setRegisterError] = React.useState({
+        isError: false,
+        errorMessage: ''
+    })
+
+    const [registerSuccess, setRegisterSuccess] = React.useState({
+        isSuccess: false,
+        message: ""
+    })
+
+    const [loginFormData, setLoginFormData] = React.useState({
+        username: "",
+        password: ""
+    })
+
     function handleChange(event){
         const {name, value, type, checked} = event.target;
-        setFormData((prevData) => {
+        setRegisterFormData((prevData) => {
             return {
                 ...prevData,
                 [name]: type === "checkbox" ? checked : value 
@@ -22,9 +39,18 @@ export default function LandingPage(){
         })
     }
 
-    function handleSubmit(event){
-        console.log("Form submitted! Your form is ", formData);
-        event.preventDefault();
+    async function handleRegisterSubmit(event){
+        event.preventDefault()
+        register(registerFormData)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        //console.log(JSON.stringify(res.response, null, 2))
+        // console.log(registerError)
+        
     }
 
     return (
@@ -34,22 +60,24 @@ export default function LandingPage(){
                 <h1 className='header'>
                     Welcome to Yacked! Please create an account below.
                 </h1>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleRegisterSubmit}>
                     <label>
                         Username:
-                        <input type="text" value={formData.username} onChange={handleChange} name="username"/>
+                        <input type="text" value={registerFormData.username} onChange={handleChange} name="username"/>
                     </label>
                     <label>
                         Email: 
-                        <input type="email" value={formData.email} onChange={handleChange} name="email"/>
+                        <input type="email" value={registerFormData.email} onChange={handleChange} name="email"/>
                     </label>
                     <label>
                         Password: 
-                        <input type="password" value={formData.password} onChange={handleChange} name="password"/>
+                        <input type="password" value={registerFormData.password} onChange={handleChange} name="password"/>
                     </label>
-                    <input type="checkbox" id="emailNotifs" checked={formData.emailNotifs} onChange={handleChange} name="emailNotifs"/>
+                    <input type="checkbox" id="emailNotifs" checked={registerFormData.emailNotifs} onChange={handleChange} name="emailNotifs"/>
                     <label htmlFor='emailNotifs'>Sign up for email notifications</label>
                     <button className='submit-btn'>Sign up</button>
+                    {registerError.isError && <p style={{color: 'red'}}>{String(registerError.errorMessage)}</p>}
+                    {registerSuccess.isSuccess && <p style={{color: 'green'}}>{registerSuccess.message}</p>}
                 </form>
             </div>
         </div>

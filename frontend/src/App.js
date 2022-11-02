@@ -7,8 +7,8 @@ import React from 'react';
 
 function App() {
   //return <Workout active={true} workoutData={exampleWorkoutData}/>
-  return <Home/>
-  //return <LandingPage/>
+  //return <Home/>
+  return <LandingPage/>
 }
 
 export default App;
