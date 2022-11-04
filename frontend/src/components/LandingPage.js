@@ -2,6 +2,7 @@ import React from 'react'
 import './LandingPage.css'
 import register from '../services/register'
 import login from '../services/login'
+import comms from '../services/comms'
 
 export default function LandingPage(){
 
@@ -19,32 +20,21 @@ export default function LandingPage(){
         username: null,
         name: null
     })
-    
-    //change these to one state that manages errors and success notifiers (these dont need to be JSON anyway)
-    const [registerError, setRegisterError] = React.useState({
-        isError: false,
-        message: ''
-    })
 
-    const [registerSuccess, setRegisterSuccess] = React.useState({
-        isSuccess: false,
-        message: ""
-    })
-
-    const [loginSuccess, setLoginSuccess] = React.useState({
-        isSuccess: false,
-        message: ""
-    })
-
-    const [loginError, setLoginError] = React.useState({
-        isError: false,
-        message: "Invalid credentials ❌"
-    })
+    const [loginStatus, setLoginStatus] = React.useState(null)
+    const [registerStatus, setRegisterStatus] = React.useState(null)
 
     const [loginFormData, setLoginFormData] = React.useState({
         username: "",
         password: ""
     })
+
+    // React.useEffect(() => {
+    //     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
+    //     const loggedInUser = JSON.parse(loggedInUserJSON)
+    //     setUser(loggedInUser)
+    //     comms.setToken(user.token)
+    // }, [])
 
     function handleRegisterChange(event){
         const {name, value, type, checked} = event.target;
@@ -67,37 +57,29 @@ export default function LandingPage(){
     }
 
     async function handleRegisterSubmit(event){
-        setRegisterError({isError: false})
         event.preventDefault()
         try {
             const res = await register(registerFormData)
-            setRegisterSuccess({
-                isSuccess: true,
-                message: "Successfully signed up 💪"
-            })
+            setRegisterStatus(true)
         } catch(exception) {
             console.log(JSON.stringify(exception, null, 2))
-            setRegisterError({
-                isError: true,
-                message: 'Something went wrong'
-            })
+            setRegisterStatus(false)
         }
     }
 
     async function handleLoginSubmit(event) {
         event.preventDefault()
         try {
-            setLoginError({isError: false})
             const res = await login(loginFormData)
-            console.log(res)
+            //window.localStorage.setItem('loggedInUser', JSON.stringify(res))
             setUser({
                 token: res.token,
                 username: res.username
             })
-            setLoginSuccess({isSuccess: true})
+            comms.setToken(user.token)
+            setLoginStatus(true)
         } catch(exception) {
-            setLoginError({isError: true})
-            console.log('exception occurred in login')
+            setLoginStatus(false)
             console.log(JSON.stringify(exception, null, 2))
         }
         
@@ -127,8 +109,8 @@ export default function LandingPage(){
                     <input type="checkbox" id="emailNotifs" checked={registerFormData.emailNotifs} onChange={handleRegisterChange} name="emailNotifs"/>
                     <label htmlFor='emailNotifs'>Sign up for email notifications</label>
                     <button className='submit-btn'>Sign up</button>
-                    {registerError.isError && <p style={{color: 'red'}}>{String(registerError.message)}</p>}
-                    {registerSuccess.isSuccess && <p style={{color: 'green'}}>{String(registerSuccess.message)}</p>}
+                    {registerStatus === false && <p style={{color: 'red'}}>Error registering. Username may be taken.</p>}
+                    {registerStatus === true && <p style={{color: 'green'}}>Successfully signed up!</p>}
                 </form>
                 <form onSubmit={handleLoginSubmit}>
                     <h1>Log in</h1>
@@ -141,8 +123,8 @@ export default function LandingPage(){
                         <input type="password" value={loginFormData.password} onChange={handleLoginChange} name="password"/>
                     </label>
                     <button className='submit-btn'>Log in</button>
-                    {loginError.isError && <p style={{color: 'red'}}>Invalid credentials</p>}
-                    {loginSuccess.isSuccess && <p style={{color: 'green'}}>Successfully logged in! Your jwt token is {user.token}</p>}
+                    {loginStatus === false && <p style={{color: 'red'}}>Invalid credentials</p>}
+                    {loginStatus === true && <p style={{color: 'green'}}>Successfully logged in! Your jwt token is {user.token}</p>}
                 </form>
             </div>
         </div>

@@ -29,20 +29,29 @@ templatesRouter.delete(`/del/:id`, async (request, response) => {
     // Template.findByIdAndRemove(request.params.id)
     //     .then(response.status(204).end())
     //     .catch(err => console.log(err))
-    const {userId} = request.body
-    const user = await User.findById(userId)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "token is missing or invalid"})
+    }
+    const user = await User.findById(decodedToken.id)
     if(!user) {
         return response.status(400).json({
             error: 'User not found'
         })
     }
-    //user.templates.pull({_id: request.params.id})
+    user.templates.pull({_id: request.params.id})
 })
 
 templatesRouter.delete(`/test`, async (request, response) => {
-    const {userId} = request.body
     //const templateId = request.params.id
-    const user = await User.findById(userId)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "token is missing or invalid"})
+    }
+
+    const user = await User.findById(decodedToken.id)
 
     if(!user) {
         return response.status(400).json({
@@ -68,8 +77,13 @@ templatesRouter.delete(`/test`, async (request, response) => {
 // update a template by id
 templatesRouter.put(`/:id`, (request, response) => {
     const body = request.body
-    if(!body.name){
-        return response.status(400).json({error: "missing name"})
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "token is missing or invalid"})
+    }
+    if(!body.name || !body.exercises){
+        return response.status(400).json({error: "missing required information (exercises and name can not be missing)"})
     }
     Template.findByIdAndUpdate(request.params.id, {
         name: body.name,
@@ -81,15 +95,16 @@ templatesRouter.put(`/:id`, (request, response) => {
 // posting a new template
 templatesRouter.post(`/`, async (request, response) => {
     const body = request.body
-    if(!body.exercises){
-        return response.status(400).json({error: "empty exercises"})
-    }
     
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
     
     if(!decodedToken.id) {
         return response.status(401).json({error: "token is either invalid or missing"})
+    }
+
+    if(!body.exercises){
+        return response.status(400).json({error: "empty exercises"})
     }
 
     const user = await User.findById(decodedToken.id)
