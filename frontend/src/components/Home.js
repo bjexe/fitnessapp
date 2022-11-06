@@ -3,9 +3,17 @@ import Workout from './Workout'
 import workoutSummaryData from '../workoutSummaryData'
 import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
+import comms from '../services/comms'
 import './Home.css'
 
-Modal.setAppElement('#root');
+const user = {
+    username: 'test',
+    token: 'secret'
+}
+
+comms.setToken(user.token)
+
+Modal.setAppElement('#root')
 
 const modalStyles = {
     content: {
@@ -19,7 +27,7 @@ const modalStyles = {
       overflowy: 'scroll',
       maxHeight: '80%'
     },
-};
+}
 
 const buttonStyle = {
     height: '100px'
@@ -27,9 +35,9 @@ const buttonStyle = {
 
 export default function Home() {
     // states
-    const [showModal, setShowModal] = React.useState(false);
-    const [showWorkoutModal, setShowWorkoutModal] = React.useState(false);
-    const [showTemplatesModal, setShowTemplatesModal] = React.useState(false);
+    const [showModal, setShowModal] = React.useState(false)
+    const [showWorkoutModal, setShowWorkoutModal] = React.useState(false)
+    const [showTemplatesModal, setShowTemplatesModal] = React.useState(false)
     const [templateFormData, setTemplateFormData] = React.useState({
         name: "",
         exercises: [{
@@ -39,35 +47,43 @@ export default function Home() {
                 reps: 0
             }],
         }]
-    });
+    })
 
     // functions for creating a workout template
     function openTemplateModal() {
-        setShowModal(true);
+        setShowModal(true)
     }
 
     function closeModal() {
-        setShowModal(false);
+        setShowModal(false)
     }
 
-    function handleFormChange(event, index){
-
-        const {name, value} = event.target;
+    function handleFormChange(event, index, setIndex = 0){
+        const regex = /^[0-9\b]+$/ // to allow only numbers in inputs for reps and weight
+        const {name, value} = event.target
 
         setTemplateFormData(oldForm => {
-            let newForm = {...oldForm};
+            let newForm = {...oldForm}
             if (name === "templateName"){
-                newForm.name = value;
+                newForm.name = value
             } else if (name === "exerciseName") {
                 newForm.exercises[index].name = value
+            } else if (name === "weight") {
+                if (value === '' || regex.test(value)){
+                    newForm.exercises[index].sets[setIndex].weight = value
+                }
+            } else if (name === "reps") {
+                if (value === '' || regex.test(value)){
+                    newForm.exercises[index].sets[setIndex].reps = value
+                }
             }
-            return newForm;
-        });
+            return newForm
+        })
     }
 
     function addExercise() {
         setTemplateFormData(oldForm => {
-            let newForm = {...oldForm};
+            let newForm = {...oldForm}
             newForm.exercises.push({
                 name: "",
                 sets: [{
@@ -75,36 +91,75 @@ export default function Home() {
                     reps: 0
                 }]
             })
-            return newForm;
+            return newForm
+        })
+    }
+
+    function addSet(event, index) {
+        event.preventDefault()
+        setTemplateFormData(oldForm => {
+            let newForm = {...oldForm}
+            newForm.exercises[index].sets.push({
+                weight: 0,
+                reps: 0
+            })
+            return newForm
         })
     }
 
     // functions for viewing 'recent workouts', will be implemented when database is up and this app has access to it through an API
     function openWorkoutModal() {
-        setShowWorkoutModal(true);
+        setShowWorkoutModal(true)
     }
 
     function closeWorkoutModal () {
-        setShowWorkoutModal(false);
+        setShowWorkoutModal(false)
     }
 
     //functions for starting workouts
     function openWorkoutTemplateModal() {
-        setShowTemplatesModal(true);
+        setShowTemplatesModal(true)
     }
 
     function closeWorkoutTemplateModal() {
-        setShowTemplatesModal(false);
+        setShowTemplatesModal(false)
     }
 
-    // renders that change depending on data
-    const formInputs = templateFormData.exercises.map((exercise, index) => { // need: a form for each exercise to add a certain amount of sets with default values
+    function handleTemplateSubmit(event) {
+        event.preventDefault()
+        try{
+            const res = comms.createTemplate(templateFormData)
+            console.log(`submitted template!`)
+            console.log(JSON.stringify(res, 2, null))
+        } catch (exception) {
+            console.log(`failed to submit template`)
+        }
+    }
+
+    const formInputs = templateFormData.exercises.map((exercise, index) => {
+
+        const sets = exercise.sets.map((set, setIndex) => {
+            return (
+                <div>
+                    <p>Set {setIndex + 1}:</p>
+                    <input name="weight" value = {set.weight} onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
+                    <input name="reps" value = {set.reps} onChange = {e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                </div>
+            )
+        })
+
         return(
             <div key={index}>
-                <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
-                <button onClick={(e) => e.preventDefault()}>Add a set</button>
+                {exercise.name ? <h1>{exercise.name}</h1> : <h1>Unnamed Exercise</h1>}
+                <span>
+                    <p>Name: </p>
+                    <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
+                </span>
+                <button onClick={(e) => addSet(e, index)}>Add a set</button>
+                {sets}
+                <hr/>
             </div>
-        );
+        )
     })
 
     const recentWorkouts = workoutSummaryData.map((workout) => {
@@ -126,8 +181,8 @@ export default function Home() {
                     <Workout workoutData={workoutData} active={false}/>
                 </Modal>
             </>
-        );
-    });
+        )
+    })
 
     return (
         <div className='home'>
@@ -150,10 +205,12 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
-                        <form>
+                        <form onSubmit={handleTemplateSubmit}>
+                            {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
                             <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
                             <button type="button" onClick={addExercise}>Add an exercise</button>
                             {formInputs}
+                            <button>Submit template</button>
                         </form>
                     </Modal>
 
@@ -161,7 +218,6 @@ export default function Home() {
                         Start workout from template
                     </button>
 
-                    {/* Later, include the exercises present in these templates */}
                     <Modal
                         isOpen={showTemplatesModal}
                         onRequestClose={closeWorkoutTemplateModal}
@@ -187,5 +243,5 @@ export default function Home() {
 
             </div>
         </div>
-    );
+    )
 }

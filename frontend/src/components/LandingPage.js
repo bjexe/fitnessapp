@@ -6,21 +6,14 @@ import comms from '../services/comms'
 
 export default function LandingPage(){
 
-    const [registerFormData, setRegisterFormData] = React.useState(
-        {
-            username: "",
-            password: "",
-            email: "",
-            emailNotifs: false
-        }
-    )
-
+    // state that holds information about the user when logged in
     const [user, setUser] = React.useState({
         token: null,
         username: null,
         name: null
     })
 
+    // states for registering and logging in
     const [loginStatus, setLoginStatus] = React.useState(null)
     const [registerStatus, setRegisterStatus] = React.useState(null)
 
@@ -29,6 +22,16 @@ export default function LandingPage(){
         password: ""
     })
 
+    const [registerFormData, setRegisterFormData] = React.useState(
+        {
+            username: "",
+            password: "",
+            email: "",
+            emailNotifs: false
+        }
+    )
+    
+    // get user stored in local memory
     // React.useEffect(() => {
     //     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     //     const loggedInUser = JSON.parse(loggedInUserJSON)
