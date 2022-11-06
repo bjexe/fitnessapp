@@ -6,10 +6,7 @@ import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
 
-const user = {
-    username: 'test',
-    token: 'secret'
-}
+import login from '../services/login'
 
 comms.setToken(user.token)
 
@@ -48,6 +45,25 @@ export default function Home() {
             }],
         }]
     })
+    const [user, setUser] = React.useState({
+        token: null,
+        username: null
+    })
+
+    async function submitLogin(event) {
+        event.preventDefault()
+        const loginInfo = {username: '', password: ''}
+        try {
+            const res = await login(loginInfo)
+            setUser({
+                token: res.token,
+                username: res.username
+            })
+            comms.setToken(user.token)
+        } catch(exception) {
+            console.log(JSON.stringify(exception, null, 2))
+        }
+    }
 
     // functions for creating a workout template
     function openTemplateModal() {
@@ -194,7 +210,7 @@ export default function Home() {
 
             <div className='content'>
                 <div className='menu'>
-
+                    <button onClick={submitLogin} style={buttonStyle}>Login</button>
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>

@@ -2,7 +2,7 @@ const templatesRouter = require('express').Router()
 const Template = require('../models/template')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const {getTokenFrom} = require('../utils/auth')
+const getTokenFrom = require('../utils/auth')
 
 // getting all templates
 templatesRouter.get(`/`, async (request, response) => {

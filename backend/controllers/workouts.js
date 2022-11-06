@@ -2,7 +2,7 @@ const workoutsRouter = require('express').Router()
 const Workout = require('../models/workout')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const {getTokenFrom} = require('../utils/auth')
+const getTokenFrom = require('../utils/auth')
 
 // get all workouts
 workoutsRouter.get(`/`, (request, response) => {

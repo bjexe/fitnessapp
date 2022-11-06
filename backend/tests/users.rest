@@ -1,11 +1,17 @@
-POST http://localhost:3001/api/users
+POST http://localhost:3001/api/register
 Content-Type: application/json
 
 {
-    "username": "benjamin",
-    "name": "ben",
-    "password": "Hamburger12"
+    "username": "rest",
+    "name": "rest",
+    "password": "Hamburger13"
 }
 
 ###
+POST http://localhost:3001/api/login
+Content-Type: application/json
 
+{
+    "username": "rest",
+    "password": "Hamburger13"
+}
