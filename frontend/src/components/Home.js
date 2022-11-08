@@ -80,6 +80,16 @@ export default function Home() {
     }
 
     function closeModal() {
+        setTemplateFormData({
+            name: "",
+            exercises: [{
+                name: "",
+                sets: [{
+                    weight: 0,
+                    reps: 0
+                }],
+            }]
+        })
         setShowModal(false)
     }
 
@@ -246,7 +256,7 @@ export default function Home() {
                         isOpen={showModal}
                         onRequestClose={closeModal}
                         style={modalStyles}
-                        contentLabel = "create a new template"
+                        contentLabel = "create a new workout template"
                     >
                         <form onSubmit={handleTemplateSubmit}>
                             {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
