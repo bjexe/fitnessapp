@@ -8,7 +8,7 @@ import './Home.css'
 
 import login from '../services/login'
 
-comms.setToken(user.token)
+//comms.setToken(user.token)
 
 Modal.setAppElement('#root')
 
@@ -52,7 +52,7 @@ export default function Home() {
 
     async function submitLogin(event) {
         event.preventDefault()
-        const loginInfo = {username: '', password: ''}
+        const loginInfo = {username: 'rest', password: 'Hamburger13'}
         try {
             const res = await login(loginInfo)
             setUser({

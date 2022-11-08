@@ -1,6 +1,5 @@
 const workoutData = [
     {
-      
       name: "Bench Press",
       finished: false,
       sets: [

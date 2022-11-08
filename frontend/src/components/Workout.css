@@ -1,0 +1,23 @@
+.exercise-container {
+    margin: 30px auto;
+    width: 50%;
+    border: 2px solid black;
+    border-radius: 50px;
+}
+
+.exercise-body {
+    margin: 10px 20px;
+}
+
+.set-container {
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.exercise-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
