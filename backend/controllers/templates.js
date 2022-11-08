@@ -11,18 +11,18 @@ templatesRouter.get(`/`, async (request, response) => {
 })
 
 // getting a specific template by id
-templatesRouter.get(`/:id`, (request, response) => {
-    Template.findById(request.params.id).then(template => {
-        if(template) {
-            response.json(template)
-        } else {
-            response.status(404).end()
-        }
-    }).catch(error => {
-        console.log(err)
-        response.status(400).send({error: "malformatted id"})
-    })
-})
+// templatesRouter.get(`/:id`, (request, response) => {
+//     Template.findById(request.params.id).then(template => {
+//         if(template) {
+//             response.json(template)
+//         } else {
+//             response.status(404).end()
+//         }
+//     }).catch(error => {
+//         console.log(err)
+//         response.status(400).send({error: "malformatted id"})
+//     })
+// })
 
 // delete a template by id
 templatesRouter.delete(`/del/:id`, async (request, response) => {
@@ -41,6 +41,21 @@ templatesRouter.delete(`/del/:id`, async (request, response) => {
         })
     }
     user.templates.pull({_id: request.params.id})
+})
+
+templatesRouter.get(`/user`, async (request, response) => {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        response.status(401).json({error: "token is missing or invalid"})
+    }
+    const user = await User.findById(decodedToken.id)
+    const templates = await Template.find({
+        _id: {
+            $in: user.templates
+        }
+    })
+    response.json(templates)
 })
 
 templatesRouter.delete(`/test`, async (request, response) => {

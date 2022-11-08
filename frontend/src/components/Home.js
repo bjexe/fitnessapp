@@ -49,6 +49,13 @@ export default function Home() {
         token: null,
         username: null
     })
+    const [templates, setTemplates] = React.useState([])
+
+    React.useEffect(() => {
+        if(user.token) {
+            getTemplates()
+        }
+    }, [user])
 
     async function submitLogin(event) {
         event.preventDefault()
@@ -59,7 +66,9 @@ export default function Home() {
                 token: res.token,
                 username: res.username
             })
-            comms.setToken(user.token)
+            if(res.token){
+                comms.setToken(res.token)
+            }
         } catch(exception) {
             console.log(JSON.stringify(exception, null, 2))
         }
@@ -141,14 +150,23 @@ export default function Home() {
         setShowTemplatesModal(false)
     }
 
-    function handleTemplateSubmit(event) {
+    async function handleTemplateSubmit(event) {
         event.preventDefault()
         try{
-            const res = comms.createTemplate(templateFormData)
-            console.log(`submitted template!`)
-            console.log(JSON.stringify(res, 2, null))
+            const res = await comms.createTemplate(templateFormData)
+            getTemplates()
         } catch (exception) {
             console.log(`failed to submit template`)
+        }
+    }
+
+    async function getTemplates(event) {
+        //event.preventDefault()
+        try {
+            const templatesArray = await comms.getAllUserTemplates()
+            setTemplates(templatesArray)
+        } catch (exception) {
+            console.log('failed to get templates')
         }
     }
 
@@ -200,6 +218,13 @@ export default function Home() {
         )
     })
 
+    const templateSelections = templates.map((template, index) => {
+        /*onClick={beginWorkout(template)}*/ //to be implemented when react router is learned
+        return (
+            <button onClick={e => e.preventDefault()}>{template.name}</button> 
+        )
+    })
+
     return (
         <div className='home'>
 
@@ -211,6 +236,8 @@ export default function Home() {
             <div className='content'>
                 <div className='menu'>
                     <button onClick={submitLogin} style={buttonStyle}>Login</button>
+                    <button onClick={() => console.log(user.token)}>print token</button>
+                    {/*<button onClick={getTemplates} style={buttonStyle}>Console log templates</button>*/}
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
@@ -237,13 +264,12 @@ export default function Home() {
                     <Modal
                         isOpen={showTemplatesModal}
                         onRequestClose={closeWorkoutTemplateModal}
+                        // onAfterOpen={getTemplates}
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
                         <h2>Select a template to begin</h2>
-                        <button>Push</button>
-                        <button>Pull</button>
-                        <button>Leg</button>
+                        {templateSelections}
                     </Modal>
 
                     <button style = {buttonStyle} onClick={openWorkoutModal} name="startEmpty">

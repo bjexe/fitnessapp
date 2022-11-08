@@ -16,6 +16,7 @@ templateSchema.set('toJSON', {
         returnedObj.id = returnedObj._id.toString()
         delete returnedObj._id
         delete returnedObj.__v
+        delete returnedObj.user
     }
 })
 

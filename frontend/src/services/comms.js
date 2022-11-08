@@ -30,8 +30,11 @@ function updateWorkout(id, workout) {
     return request.then(response => response.data)
 }
 
-function getAllTemplates() {
-    const request = axios.get(templateBaseUrl)
+async function getAllUserTemplates() {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = axios.get(`${templateBaseUrl}/user`, config)
     return request.then(response => response.data)
 }
 
@@ -50,4 +53,4 @@ function updateTemplate(id, template) {
     const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
 }
 
-export default {getAllWorkouts, createWorkout, updateWorkout, setToken, getAllTemplates, createTemplate, updateTemplate}
+export default {getAllWorkouts, createWorkout, updateWorkout, setToken, getAllUserTemplates, createTemplate, updateTemplate}
