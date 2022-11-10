@@ -40,7 +40,7 @@ export default function LandingPage(){
     // }, [])
 
     function handleRegisterChange(event){
-        const {name, value, type, checked} = event.target;
+        const {name, value, type, checked} = event.target
         setRegisterFormData((prevData) => {
             return {
                 ...prevData,
@@ -81,7 +81,7 @@ export default function LandingPage(){
             })
             comms.setToken(user.token)
             setLoginStatus(true)
-        } catch(exception) {
+        } catch (exception) {
             setLoginStatus(false)
             console.log(JSON.stringify(exception, null, 2))
         }

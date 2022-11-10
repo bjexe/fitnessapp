@@ -33,6 +33,6 @@ export default function Exercise( {data, setData, handleClick, active, exerciseI
                 {active && <button onClick={e => handleClick(e, exerciseIndex)} name={"finish"}>{!data.finished ? "Finish" : "Edit exercise"}</button>}
             </div>
         </div>
-    );
+    )
 
 }
