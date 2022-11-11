@@ -5,18 +5,23 @@ import exampleWorkoutData from './exampleWorkoutData'
 import Home from './components/Home'
 import React from 'react'
 import {
-  createBrowserRouter, RouterProvider, Route
+  Routes, Route, Link, isRouteErrorResponse, UNSAFE_RouteContext
 } from "react-router-dom"
+import {UserContext} from "./UserContext"
 
 function App() {
-
-  const router = createBrowserRouter([{
-    path: "/",
-    element: <LandingPage/>
-  }])
-
+  const [user, setUser] = React.useState(null)
+  const userInfo = React.useMemo(() => {user, setUser}, [user, setUser])
   return (
-    <RouterProvider router={router} />
+    <>
+      <Routes>
+        <UserContext.Provider value={userInfo}>
+          <Route path="/" element={<LandingPage/>}/>
+          <Route path="/home" element={<Home/>}/>
+          <Route path="/workout" element={<Workout/>}/>
+        </UserContext.Provider>
+      </Routes>
+    </>
   )
 }
 
