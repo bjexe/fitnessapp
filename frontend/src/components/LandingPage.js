@@ -3,8 +3,12 @@ import './LandingPage.css'
 import register from '../services/register'
 import login from '../services/login'
 import comms from '../services/comms'
+import {useNavigate} from 'react-router-dom'
+import {useAuth} from '../context/AuthContext'
 
 export default function LandingPage(){
+
+    console.log("login page rendering")
 
     // state that holds information about the user when logged in
     const [user, setUser] = React.useState({
@@ -30,6 +34,9 @@ export default function LandingPage(){
             emailNotifs: false
         }
     )
+
+    let navigate = useNavigate()
+    let auth = useAuth()
     
     // get user stored in local memory
     // React.useEffect(() => {
@@ -73,14 +80,12 @@ export default function LandingPage(){
     async function handleLoginSubmit(event) {
         event.preventDefault()
         try {
-            const res = await login(loginFormData)
+            await auth.signin(loginFormData)
             //window.localStorage.setItem('loggedInUser', JSON.stringify(res))
-            setUser({
-                token: res.token,
-                username: res.username
-            })
-            comms.setToken(user.token)
             setLoginStatus(true)
+            setTimeout(() => {
+                navigate("/home")
+            }, 1500)
         } catch (exception) {
             setLoginStatus(false)
             console.log(JSON.stringify(exception, null, 2))
@@ -127,7 +132,7 @@ export default function LandingPage(){
                     </label>
                     <button className='submit-btn'>Log in</button>
                     {loginStatus === false && <p style={{color: 'red'}}>Invalid credentials</p>}
-                    {loginStatus === true && <p style={{color: 'green'}}>Successfully logged in! Your jwt token is {user.token}</p>}
+                    {loginStatus === true && <p style={{color: 'green'}}>Successfully logged in! Redirecting to homepage...</p>}
                 </form>
             </div>
         </div>
