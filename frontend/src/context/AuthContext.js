@@ -21,7 +21,7 @@ function AuthProvider({children}) {
             username: res.username
         })
         console.log(`token: ${res.token}`)
-        comms.setToken(user.token)
+        comms.setToken(res.token)
     }
     let value = {user, signin, signout}
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -5,10 +5,9 @@ import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
-
 import login from '../services/login'
-
-//comms.setToken(user.token)
+import {AuthContext, AuthProvider, useAuth, AuthStatus, RequireAuth} from '../context/AuthContext'
+import {useNavigate} from 'react-router-dom'
 
 Modal.setAppElement('#root')
 
@@ -31,6 +30,10 @@ const buttonStyle = {
 }
 
 export default function Home() {
+
+    let auth = useAuth()
+    let navigate = useNavigate()
+
     // states
     const [showModal, setShowModal] = React.useState(false)
     const [showWorkoutModal, setShowWorkoutModal] = React.useState(false)
@@ -171,12 +174,12 @@ export default function Home() {
     }
 
     async function getTemplates(event) {
-        //event.preventDefault()
+        event.preventDefault()
         try {
             const templatesArray = await comms.getAllUserTemplates()
             setTemplates(templatesArray)
         } catch (exception) {
-            console.log('failed to get templates')
+            console.log(JSON.stringify(exception, null, 2))
         }
     }
 
@@ -245,9 +248,6 @@ export default function Home() {
 
             <div className='content'>
                 <div className='menu'>
-                    <button onClick={submitLogin} style={buttonStyle}>Login</button>
-                    <button onClick={() => console.log(user.token)}>print token</button>
-                    {/*<button onClick={getTemplates} style={buttonStyle}>Console log templates</button>*/}
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
