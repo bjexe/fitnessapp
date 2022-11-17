@@ -1,15 +1,9 @@
 import React from 'react'
 import './Workout.css'
 
-export default function Workout({workoutData, active}){
+export default function Workout({workoutData, active, editing}){
 
-  console.log('rendered')
-
-  const [data, setData] = React.useState([])
-
-  React.useEffect(() => {
-    setData(workoutData)
-  }, [])
+  const [data, setData] = React.useState(workoutData)
 
   const exerciseDisplays = data.map((entry, exerciseIndex) => {
       //return <Exercise data={entry} key={uuidv4()} setData={setData} handleClick={handleClick} active={active} exerciseIndex={index} handleChange={handleChange}/>
@@ -118,7 +112,7 @@ export default function Workout({workoutData, active}){
           <div className='exercises-container'>
               {exerciseDisplays}
           </div>
-          {active && <button onClick={submitWorkout}>Finish workout</button>}
+          {active && <button onClick={submitWorkout}>{editing ? "Submit changes" : "Submit workout"}</button>}
           {active && <button onClick={handleClick} name={"addExercise"}>Add an exercise</button>}
       </div>
   )

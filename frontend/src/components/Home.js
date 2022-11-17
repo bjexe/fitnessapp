@@ -48,34 +48,12 @@ export default function Home() {
             }],
         }]
     })
-    const [user, setUser] = React.useState({
-        token: null,
-        username: null
-    })
+
     const [templates, setTemplates] = React.useState([])
 
     React.useEffect(() => {
-        if(user.token) {
-            getTemplates()
-        }
-    }, [user])
-
-    async function submitLogin(event) {
-        event.preventDefault()
-        const loginInfo = {username: 'rest', password: 'Hamburger13'}
-        try {
-            const res = await login(loginInfo)
-            setUser({
-                token: res.token,
-                username: res.username
-            })
-            if(res.token){
-                comms.setToken(res.token)
-            }
-        } catch(exception) {
-            console.log(JSON.stringify(exception, null, 2))
-        }
-    }
+        getTemplates()
+    }, [])
 
     // functions for creating a workout template
     function openTemplateModal() {
@@ -242,8 +220,7 @@ export default function Home() {
         <div className='home'>
 
             <nav className='home-nav'>
-                Yacked!
-                <img src='../images/logo-small.jpg' alt='logo-small' style={{width: "100px"}}/>
+                yacked
             </nav>
 
             <div className='content'>
@@ -251,7 +228,7 @@ export default function Home() {
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
-
+                    <button onClick={() => comms.printToken()}>Print token from comms</button>
                     <Modal
                         isOpen={showModal}
                         onRequestClose={closeModal}

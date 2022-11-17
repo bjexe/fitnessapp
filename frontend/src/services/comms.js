@@ -9,6 +9,10 @@ function setToken(newToken) {
     console.log(`successfully set the token as: ${newToken}`)
 }
 
+function printToken() {
+    console.log(token)
+}
+
 function getAllWorkouts() {
     const request = axios.get(workoutBaseUrl)
     return request.then(response => response.data)
@@ -53,4 +57,4 @@ function updateTemplate(id, template) {
     const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
 }
 
-export default {getAllWorkouts, createWorkout, updateWorkout, setToken, getAllUserTemplates, createTemplate, updateTemplate}
+export default {getAllWorkouts, createWorkout, updateWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}
