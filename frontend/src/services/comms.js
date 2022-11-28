@@ -7,7 +7,7 @@ let token = null
 function setToken(newToken) {
     token = `bearer ${newToken}`
     console.log(`successfully set the token as: ${newToken}`)
-}
+}  
 
 function printToken() {
     console.log(token)
@@ -15,6 +15,14 @@ function printToken() {
 
 function getAllWorkouts() {
     const request = axios.get(workoutBaseUrl)
+    return request.then(response => response.data)
+}
+
+async function getAllUserWorkouts() {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const response = await axios.get(`${workoutBaseUrl}/user`, config)
     return request.then(response => response.data)
 }
 
@@ -57,4 +65,4 @@ function updateTemplate(id, template) {
     const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
 }
 
-export default {getAllWorkouts, createWorkout, updateWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}
+export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}

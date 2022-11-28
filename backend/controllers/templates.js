@@ -43,6 +43,7 @@ templatesRouter.delete(`/del/:id`, async (request, response) => {
     user.templates.pull({_id: request.params.id})
 })
 
+// get all templates tied to a user
 templatesRouter.get(`/user`, async (request, response) => {
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)

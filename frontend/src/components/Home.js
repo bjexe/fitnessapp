@@ -5,8 +5,7 @@ import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
-import login from '../services/login'
-import {AuthContext, AuthProvider, useAuth, AuthStatus, RequireAuth} from '../context/AuthContext'
+import {useAuth} from '../context/AuthContext'
 import {useNavigate} from 'react-router-dom'
 
 Modal.setAppElement('#root')
@@ -48,11 +47,13 @@ export default function Home() {
             }],
         }]
     })
+    const [pastWorkouts, setPastWorkouts] = React.useState([])
 
     const [templates, setTemplates] = React.useState([])
 
     React.useEffect(() => {
         getTemplates()
+        getPastWorkouts()
     }, [])
 
     // functions for creating a workout template
@@ -156,6 +157,16 @@ export default function Home() {
         try {
             const templatesArray = await comms.getAllUserTemplates()
             setTemplates(templatesArray)
+        } catch (exception) {
+            console.log(JSON.stringify(exception, null, 2))
+        }
+    }
+
+    async function getPastWorkouts(event) {
+        event.preventDefault()
+        try {
+            const workoutsArray = await comms.getAllUserWorkouts()
+            setPastWorkouts(workoutsArray)
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
         }

@@ -4,6 +4,7 @@ import './WorkoutSummary.css'
 //icons
 import {GiWeightLiftingUp} from 'react-icons/gi'
 import {FiClock, FiCalendar} from 'react-icons/fi'
+import {IconContext, iconContext} from 'react-icons'
 
 function getTimeDifference(start, end) {
     let seconds = (end.getTime() - start.getTime()) / 1000
@@ -42,23 +43,25 @@ export default function WorkoutSummary({data}) {
     })
 
     return(
-        <div className='card-container'>
-            <div className='header'>
-                <h1>{data.name ? data.name : "Custom Exercise"}</h1>
-                <p><FiCalendar/>{data.endDate.toDateString()}</p>
-                <span className='stats'>
-                    <p><FiClock/>{getTimeDifference(data.startDate, data.endDate)}</p>
-                    <p><GiWeightLiftingUp/>{totalWeightLifted} lbs</p>
-                </span>
+        <IconContext.Provider value={{style: {verticalAlign: '-6%'}}}>
+            <div className='card-container'>
+                <div className='header'>
+                    <h1>{data.name ? data.name : "Custom Exercise"}</h1>
+                    <p><FiCalendar/> {data.endDate.toDateString()}</p>
+                    <span className='stats'>
+                        <p><FiClock/> {getTimeDifference(data.startDate, data.endDate)}</p>
+                        <p><GiWeightLiftingUp/> {totalWeightLifted} lbs</p>
+                    </span>
+                </div>
+                
+                <div className='summary'>
+                    <span className='summary-header'>
+                        <h2>exercise</h2>
+                        <h2>best set</h2>
+                    </span>
+                    {exercises}
+                </div>
             </div>
-            
-            <div className='summary'>
-                <span className='summary-header'>
-                    <h2>exercise</h2>
-                    <h2>best set</h2>
-                </span>
-                {exercises}
-            </div>
-        </div>
+        </IconContext.Provider>
     )
 }

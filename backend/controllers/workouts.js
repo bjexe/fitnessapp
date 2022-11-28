@@ -12,10 +12,19 @@ workoutsRouter.get(`/`, (request, response) => {
 })
 
 //get all workouts associated with a specific user
-workoutsRouter.get(`/:userId`, (request, response) => {
-    Workout.find({userId: request.params.userId}).then(workouts => {
-        response.json(workouts)
+workoutsRouter.get(`/user`, async (request, response) => {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+        reponse.status(401).json({error: "token is missing or invalid"})
+    }
+    const user = await User.findById(decodedToken.id)
+    const workouts = await Workout.find({
+        _id: {
+            $in: user.workouts
+        }
     })
+    response.json(workouts)
 })
 
 // get specific workout by id
