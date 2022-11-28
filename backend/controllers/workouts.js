@@ -16,7 +16,7 @@ workoutsRouter.get(`/user`, async (request, response) => {
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
     if (!decodedToken.id) {
-        reponse.status(401).json({error: "token is missing or invalid"})
+        response.status(401).json({error: "token is missing or invalid"})
     }
     const user = await User.findById(decodedToken.id)
     const workouts = await Workout.find({
@@ -43,24 +43,29 @@ workoutsRouter.get(`/:id`, (request, response) => {
 
 // submitting a new workout
 workoutsRouter.post(`/`, async (request, response) => {
-    const {userId, exercises} = request.body
+    const body = request.body
 
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
+
     if(!decodedToken.id) {
         return response.status(401).json({error: "Token is either invalid or missing"})
     }
 
-    if(!exercises) {
-        return response.status(400).send({error: "workout must include some form of exercises"})
+    if(!body.exercises) {
+        return response.status(400).json({error: "Error: empty workout"})
     }
+
     const workout = new Workout({
-        date: new Date(),
-        user: userId,
+        name: body.name ? body.name : "Unnamed Workout",
+        endDate: new Date(),
+        startDate: body.startDate,
+        user: decodedToken.id,
         exercises: body.exercises
     })
-    const user = User.findById(decodedToken.id)
+    const user = await User.findById(decodedToken.id)
     const savedWorkout = await workout.save()
+    // console.log(user)
     user.workouts = user.workouts.concat(savedWorkout._id)
     await user.save()
     response.json(savedWorkout)

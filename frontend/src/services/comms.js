@@ -22,8 +22,8 @@ async function getAllUserWorkouts() {
     const config = {
         headers: {Authorization: token}
     }
-    const response = await axios.get(`${workoutBaseUrl}/user`, config)
-    return request.then(response => response.data)
+    const request = await axios.get(`${workoutBaseUrl}/user`, config)
+    return request.data
 }
 
 async function createWorkout(workout) {

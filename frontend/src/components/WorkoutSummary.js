@@ -16,6 +16,9 @@ function getTimeDifference(start, end) {
 
 export default function WorkoutSummary({data}) {
 
+    const endDate = new Date(data.endDate)
+    const startDate = new Date(data.startDate)
+
     let totalWeightLifted = 0
     data.exercises.forEach((exercise, index) => {
         exercise.sets.forEach(set => {
@@ -47,9 +50,9 @@ export default function WorkoutSummary({data}) {
             <div className='card-container'>
                 <div className='header'>
                     <h1>{data.name ? data.name : "Custom Exercise"}</h1>
-                    <p><FiCalendar/> {data.endDate.toDateString()}</p>
+                    <p><FiCalendar/> {endDate.toDateString()}</p>
                     <span className='stats'>
-                        <p><FiClock/> {getTimeDifference(data.startDate, data.endDate)}</p>
+                        <p><FiClock/> {getTimeDifference(startDate, endDate)}</p>
                         <p><GiWeightLiftingUp/> {totalWeightLifted} lbs</p>
                     </span>
                 </div>

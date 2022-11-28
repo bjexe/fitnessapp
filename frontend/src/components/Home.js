@@ -1,6 +1,5 @@
 import React from 'react'
-import Workout from './Workout'
-import workoutSummaryData from '../workoutSummaryData'
+import WorkoutSummary from './WorkoutSummary'
 import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import comms from '../services/comms'
@@ -55,6 +54,13 @@ export default function Home() {
         getTemplates()
         getPastWorkouts()
     }, [])
+
+    async function postDummyWorkout(event) {
+        event.preventDefault()
+        const res = await comms.createWorkout(workoutData)
+        console.log(`added: ${res}`)
+        getPastWorkouts()
+    }
 
     // functions for creating a workout template
     function openTemplateModal() {
@@ -153,19 +159,20 @@ export default function Home() {
     }
 
     async function getTemplates(event) {
-        event.preventDefault()
+        // event.preventDefault()
         try {
             const templatesArray = await comms.getAllUserTemplates()
+            console.log(`Found these templates: ${templatesArray}`)
             setTemplates(templatesArray)
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
         }
     }
 
-    async function getPastWorkouts(event) {
-        event.preventDefault()
+    async function getPastWorkouts() {
         try {
             const workoutsArray = await comms.getAllUserWorkouts()
+            console.log(JSON.stringify(workoutsArray, null, 2))
             setPastWorkouts(workoutsArray)
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
@@ -198,32 +205,16 @@ export default function Home() {
         )
     })
 
-    const recentWorkouts = workoutSummaryData.map((workout) => {
+    const recentWorkouts = pastWorkouts.map((workout) => {
         return (
-            <>
-                <hr />
-
-                <div onClick={openWorkoutModal}>
-                    <p style={{fontsize: "100px"}}>{workout.title}</p>
-                    <p>{workout.exercises} Exercises</p>
-                </div>
-
-                <Modal
-                    isOpen={showWorkoutModal}
-                    onRequestClose={closeWorkoutModal}
-                    style={modalStyles}
-                    contentLabel = "show recent workouts"
-                >
-                    <Workout workoutData={workoutData} active={false}/>
-                </Modal>
-            </>
+            <WorkoutSummary data={workout} />
         )
     })
 
     const templateSelections = templates.map((template, index) => {
         /*onClick={beginWorkout(template)}*/ //to be implemented when react router is learned
         return (
-            <button onClick={e => e.preventDefault()}>{template.name}</button> 
+            <button onClick={e => e.preventDefault()}>{template.name ? template.name : "Unnamed Template"}</button> 
         )
     })
 
@@ -239,6 +230,7 @@ export default function Home() {
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
+                    <button onClick={e => postDummyWorkout(e)} >Submit dummy workout</button>
                     <button onClick={() => comms.printToken()}>Print token from comms</button>
                     <Modal
                         isOpen={showModal}
@@ -275,9 +267,12 @@ export default function Home() {
                     </button>
 
                 </div>
+                
+                <hr/>
 
+                <h1 className='recent-workouts-header'>Recent Workouts</h1>
+                
                 <div className='recent-workouts'>
-                    <h1>Recent Workouts</h1>
                     {recentWorkouts}
                 </div>
 
