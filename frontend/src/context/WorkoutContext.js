@@ -5,11 +5,7 @@ let WorkoutContext = React.createContext(null)
 
 function WorkoutProvider({children}) {
 
-    const [workout, setWorkout] = React.useState({
-        name: "",
-        startDate: null,
-        exercises: []
-    })
+    const [workout, setWorkout] = React.useState(null)
 
     const update = (data) => {
         setWorkout(data)

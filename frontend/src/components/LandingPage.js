@@ -8,8 +8,6 @@ import {useAuth} from '../context/AuthContext'
 
 export default function LandingPage(){
 
-    console.log("login page rendering")
-
     // state that holds information about the user when logged in
     const [user, setUser] = React.useState({
         token: null,

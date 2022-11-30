@@ -1,7 +1,7 @@
 import React from 'react'
 import comms from '../services/comms'
 import login from '../services/login'
-import {useNavigate, Navigate} from 'react-router-dom'
+import {Navigate} from 'react-router-dom'
 
 let AuthContext = React.createContext(null)
 
@@ -20,7 +20,6 @@ function AuthProvider({children}) {
             token: res.token,
             username: res.username
         })
-        console.log(`token: ${res.token}`)
         comms.setToken(res.token)
     }
     let value = {user, signin, signout}
@@ -33,7 +32,6 @@ function useAuth() {
 
 function AuthStatus() {
     let auth = useAuth()
-    let navigate = useNavigate()
     if(!auth.user) { 
         return <p>You are not logged in.</p>
     }

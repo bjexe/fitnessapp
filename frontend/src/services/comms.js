@@ -6,7 +6,6 @@ let token = null
 
 function setToken(newToken) {
     token = `bearer ${newToken}`
-    console.log(`successfully set the token as: ${newToken}`)
 }  
 
 function printToken() {

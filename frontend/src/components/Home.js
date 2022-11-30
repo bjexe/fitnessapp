@@ -6,6 +6,7 @@ import comms from '../services/comms'
 import './Home.css'
 import {useAuth} from '../context/AuthContext'
 import {useNavigate} from 'react-router-dom'
+import {useWorkout} from '../context/WorkoutContext'
 
 Modal.setAppElement('#root')
 
@@ -30,6 +31,7 @@ const buttonStyle = {
 export default function Home() {
 
     let auth = useAuth()
+    let workout = useWorkout()
     let navigate = useNavigate()
 
     // states
@@ -162,7 +164,6 @@ export default function Home() {
         // event.preventDefault()
         try {
             const templatesArray = await comms.getAllUserTemplates()
-            console.log(`Found these templates: ${templatesArray}`)
             setTemplates(templatesArray)
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
@@ -172,11 +173,18 @@ export default function Home() {
     async function getPastWorkouts() {
         try {
             const workoutsArray = await comms.getAllUserWorkouts()
-            console.log(JSON.stringify(workoutsArray, null, 2))
             setPastWorkouts(workoutsArray)
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
         }
+    }
+
+    function startWorkoutFromTemplate(event) {
+        const {name} = event.target
+        const template = templates.find(template => {
+            return template.id === name
+        })
+        workout.update(template)
     }
 
     const formInputs = templateFormData.exercises.map((exercise, index) => {
@@ -214,7 +222,7 @@ export default function Home() {
     const templateSelections = templates.map((template, index) => {
         /*onClick={beginWorkout(template)}*/ //to be implemented when react router is learned
         return (
-            <button onClick={e => e.preventDefault()}>{template.name ? template.name : "Unnamed Template"}</button> 
+            <button name={template.id} onClick={e => startWorkoutFromTemplate(e)} >{template.name ? template.name : "Unnamed Template"}</button> 
         )
     })
 
@@ -250,6 +258,8 @@ export default function Home() {
                     <button onClick={openWorkoutTemplateModal} name="startTemplate" style={buttonStyle}>
                         Start workout from template
                     </button>
+
+                    <button onClick={openWorkoutModal} name="newWorkout" style={buttonStyle}>Start a new workout</button>
 
                     <Modal
                         isOpen={showTemplatesModal}
