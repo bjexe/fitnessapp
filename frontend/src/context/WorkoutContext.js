@@ -1,5 +1,4 @@
 import React from 'react'
-import comms from '../services/comms'
 
 let WorkoutContext = React.createContext(null)
 
@@ -7,15 +6,7 @@ function WorkoutProvider({children}) {
 
     const [workout, setWorkout] = React.useState(null)
 
-    const update = (data) => {
-        setWorkout(data)
-    }
-
-    const submit = () => {
-        comms.createWorkout(workout)
-    }
-
-    let value = {workout, update, submit}
+    let value = {workout}
     return <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>
 
 }

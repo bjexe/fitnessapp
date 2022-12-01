@@ -2,10 +2,19 @@ import React from 'react'
 import {useWorkout} from '../context/WorkoutContext'
 
 export default function WorkoutPage(props) {
-    const workoutContext = useWorkout()
+    const [workout, setWorkout] = React.useState(null)
+
+    React.useEffect(() => {
+        const workoutContext = useWorkout()
+        if(workoutContext.workout) {
+            setWorkout(workoutContext.workout)
+        }
+    }, [])
+
     return (
         <div>
-            <pre>{ JSON.stringify(workoutContext.workout, null, 2) }</pre>
+            <button>Add an exercise</button>
+            <button>Finish workout</button>
         </div>
     )
 }
