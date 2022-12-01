@@ -6,7 +6,11 @@ function WorkoutProvider({children}) {
 
     const [workout, setWorkout] = React.useState(null)
 
-    let value = {workout}
+    function clearWorkout() {
+        setWorkout(null)
+    }
+
+    let value = {workout, clearWorkout}
     return <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>
 
 }

@@ -8,6 +8,7 @@ export default function WorkoutPage(props) {
         const workoutContext = useWorkout()
         if(workoutContext.workout) {
             setWorkout(workoutContext.workout)
+            workoutContext.clear()
         }
     }, [])
 
