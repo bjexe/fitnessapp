@@ -1,6 +1,6 @@
 import './App.css'
 import LandingPage from './components/LandingPage'
-import Workout from './components/Workout'
+import WorkoutPage from './components/WorkoutPage'
 import Home from './components/Home'
 import React from 'react'
 import {
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route index element={<LandingPage/>}/>
           <Route path="/home" element={<RequireAuth><Home/></RequireAuth>}/>
-          <Route path="/workout" element={<RequireAuth><Workout/></RequireAuth>}/>
+          <Route path="/workout" element={<RequireAuth><WorkoutPage/></RequireAuth>}/>
         <Route path="*" element={<h1>404</h1>}/>
       </Routes>
       </WorkoutProvider>

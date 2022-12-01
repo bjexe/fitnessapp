@@ -185,6 +185,7 @@ export default function Home() {
             return template.id === name
         })
         workout.update(template)
+        navigate('/workout')
     }
 
     const formInputs = templateFormData.exercises.map((exercise, index) => {
