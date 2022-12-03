@@ -93,7 +93,6 @@ export default function LandingPage(){
 
     return (
         <div className='landing-page'>
-            <img src="../images/logo.jpg" className='landing-img' alt="logo"/>
             <div className="content">
                 <h1 className='header'>
                     Welcome to Yacked!  Please create an account below.

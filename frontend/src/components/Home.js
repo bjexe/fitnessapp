@@ -184,6 +184,7 @@ export default function Home() {
         const template = templates.find(template => {
             return template.id === name
         })
+        console.log(`found template: `, JSON.stringify(template, null, 2))
         workout.update(template)
         navigate('/workout')
     }
