@@ -6,13 +6,11 @@ function WorkoutProvider({children}) {
 
     const [workout, setWorkout] = React.useState(null)
     
-    
     function clearWorkout() {
         setWorkout(null)
     }
 
     function update(data) {
-        console.log(`updating workoutContext to: `, JSON.stringify(data, null, 2))
         setWorkout(data)
     }
 
