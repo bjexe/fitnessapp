@@ -12,14 +12,13 @@ export default function WorkoutPage(props) {
     const [newExercise, setNewExercise] = React.useState(null)
     const [newExerciseActive, setNewExerciseActive] = React.useState(false)
 
-    console.log(`Workout is ${workout}`)
-
     function cancelWorkout() {
         workoutContext.clearWorkout()
         navigate('/home')
     }
 
-    async function finishWorkout() {
+    async function finishWorkout(event) {
+        event.preventDefault()
         const res = await comms.createWorkout(workout)
         workoutContext.clearWorkout()
         navigate('/home')
@@ -30,7 +29,10 @@ export default function WorkoutPage(props) {
             const newWorkout = {...oldWorkout}
             newWorkout.exercises.push({
                 name: newExercise,
-                sets: []
+                sets: [{
+                    weight: 0,
+                    reps: 0
+                }]
             })
             return newWorkout
         })
@@ -42,18 +44,62 @@ export default function WorkoutPage(props) {
         setNewExerciseActive(old => !old)
     }
 
-    function handleFormChange(event) {
+    function addSet(index) {
+        setWorkout((oldWorkout) => {
+            let newWorkout = {...oldWorkout}
+            newWorkout.exercises[index].sets.push({reps: 0, weight: 0})
+            return newWorkout
+        })
+    }
+
+    function handleFormChange(event, index, setIndex = 0) {
+        const regex = /^[0-9\b]+$/ // to allow only numbers in inputs for reps and weight
         const {name, value} = event.target
         if(name === "newExercise") {
             setNewExercise(value)
+        } else if (name === "weight") {
+            if(value === '' || regex.test(value)) {
+                setWorkout((oldWorkout) => {
+                    let newWorkout = {...oldWorkout}
+                    newWorkout.exercises[index].sets[setIndex].weight = value
+                    return newWorkout
+                })
+            }
+        } else if (name === "reps") {
+            if(value === '' || regex.test(value)) {
+                setWorkout((oldWorkout) => {
+                    let newWorkout = {...oldWorkout}
+                    newWorkout.exercises[index].sets[setIndex].reps = value
+                    return newWorkout
+                })
+            }
         }
     }
 
-    const workoutBody = workout.exercises.map((exercise) => {
+    const workoutForms = workout.exercises.map((exercise, index) => {
+        const inputs = exercise.sets.map((set, setIndex) => {
+            return (
+                <div>
+                    <p>Set #{setIndex+1}</p>
+                    <input value={set.weight} name="weight" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
+                    <input value={set.reps} name="reps" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                </div>
+            )
+        })
+        return (
+            <div>
+                {inputs}
+            </div>
+        )
+    })
+
+    const workoutBody = workout.exercises.map((exercise, index) => {
         return(
             <div>
                 <h2>{exercise.name}</h2>
                 <p>numSets: {exercise.sets.length}</p>
+                <button onClick={e => addSet(index)}>Add set</button>
+                {workoutForms[index]}
             </div>
         )
     })
@@ -61,18 +107,20 @@ export default function WorkoutPage(props) {
     return (
         <div>
             <button onClick={() => toggleNewExerciseActive()}>Add an exercise</button>
-            <button onClick={() => finishWorkout()}>Finish workout</button>
             <button onClick={() => cancelWorkout()}>Cancel workout</button>
             {
                 newExerciseActive && 
                 <form onSubmit={addExercise}>
                     <input name="newExercise" value={newExercise} onChange={handleFormChange} placeholder={"Name of new exercise"}/>
-                    <button>Submit exercise</button>
+                    <button>Add exercise to workout</button>
                     <button type="button" onClick={toggleNewExerciseActive}>Cancel</button>
                 </form>
             }
             <h1>{workout ? workout.name : 'Custom workout'}</h1>
-            {workoutBody}
+            <form onSubmit={(e) => finishWorkout(e)}>
+                {workoutBody}
+                <button>Finish workout</button>
+            </form>
         </div>
     )
 }
