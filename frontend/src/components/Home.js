@@ -153,7 +153,7 @@ export default function Home() {
     async function getPastWorkouts() {
         try {
             const workoutsArray = await comms.getAllUserWorkouts()
-            setPastWorkouts(workoutsArray)
+            setPastWorkouts([...workoutsArray])
         } catch (exception) {
             console.log(JSON.stringify(exception, null, 2))
         }
@@ -197,14 +197,13 @@ export default function Home() {
                 </span>
                 <button className="btn" onClick={(e) => addSet(e, index)}>Add a set</button>
                 {sets}
-                <hr/>
             </div>
         )
     })
 
     const recentWorkouts = pastWorkouts.map((workout) => {
         return (
-            <WorkoutSummary data={workout} getPastWorkouts={getPastWorkouts}/>
+            <WorkoutSummary data={workout} setPastWorkouts={setPastWorkouts}/>
         )
     })
 
@@ -259,13 +258,11 @@ export default function Home() {
                     </Modal>
 
                 </div>
-                
-                <hr/>
 
                 <h1 className='recent-workouts-header'>Recent Workouts</h1>
                 
                 <div className='recent-workouts'>
-                    {recentWorkouts}
+                    {recentWorkouts.length ? recentWorkouts : <h2>No workouts yet</h2>}
                 </div>
 
             </div>

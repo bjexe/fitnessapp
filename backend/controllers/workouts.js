@@ -65,12 +65,12 @@ workoutsRouter.post(`/`, async (request, response) => {
     })
     const user = await User.findById(decodedToken.id)
     const savedWorkout = await workout.save()
-    // console.log(user)
     user.workouts = user.workouts.concat(savedWorkout._id)
     await user.save()
     response.json(savedWorkout)
 })
 
+// delete a workout
 workoutsRouter.delete(`/:id`, async (request, response) => {
     const body = request.body
     const workoutId = request.params.id
@@ -94,9 +94,9 @@ workoutsRouter.delete(`/:id`, async (request, response) => {
         }
     })
 
-    await Workout.findByIdAndDelete(workoutId)
+    const deletedWorkout = await Workout.findByIdAndDelete(workoutId)
 
-    response.status(200)
+    response.json(deletedWorkout)
 
 })
 

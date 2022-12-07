@@ -1,7 +1,5 @@
 import React from 'react'
 import './WorkoutSummary.css'
-
-//icons
 import {GiWeightLiftingUp} from 'react-icons/gi'
 import {FiClock, FiCalendar} from 'react-icons/fi'
 import {IconContext, iconContext} from 'react-icons'
@@ -17,14 +15,19 @@ function getTimeDifference(start, end) {
     return hours > 0 ? `${hours} hr(s) ${minutes} min` : `${minutes} min`
 }
 
-export default function WorkoutSummary({data, getPastWorkouts}) {
+export default function WorkoutSummary({data, setPastWorkouts}) {
 
     const endDate = new Date(data.endDate)
     const startDate = new Date(data.startDate)
 
-    function deleteSummary() {
-        comms.deleteWorkout(data.id)
-        getPastWorkouts()
+    async function deleteSummary() {
+        const deleted = await comms.deleteWorkout(data.id)
+        setPastWorkouts((oldPastWorkouts) => {
+            const newPastWorkouts = oldPastWorkouts.filter((workout) => {
+                return workout.id !== deleted.id
+            })
+            return newPastWorkouts
+        })
     }
 
     let totalWeightLifted = 0
