@@ -11,6 +11,17 @@ export default function WorkoutPage(props) {
     const [workout, setWorkout] = React.useState(workoutContext.workout)
     const [newExercise, setNewExercise] = React.useState(null)
     const [newExerciseActive, setNewExerciseActive] = React.useState(false)
+    const [newName, setNewName] = React.useState(workout.name)
+    const [newNameActive, setNewNameActive] = React.useState(false)
+
+    React.useEffect(() => {
+        if(!workout.name){ 
+            setWorkout((oldWorkout) => {
+                let newWorkout = {...oldWorkout, name: "Unnamed Workout"}
+                return newWorkout
+            })
+        }
+    }, [])
 
     function cancelWorkout() {
         workoutContext.clearWorkout()
@@ -53,6 +64,15 @@ export default function WorkoutPage(props) {
         })
     }
 
+    function saveNewName() {
+        setWorkout((oldWorkout) => {
+            let newWorkout = {...oldWorkout}
+            newName ? newWorkout.name = newName : newWorkout.name = "Unnamed Workout"
+            return newWorkout
+        })
+        setNewNameActive(false)
+    }
+
     function handleFormChange(event, index, setIndex = 0) {
         const regex = /^[0-9\b]+$/ // to allow only numbers in inputs for reps and weight
         const {name, value} = event.target
@@ -74,6 +94,8 @@ export default function WorkoutPage(props) {
                     return newWorkout
                 })
             }
+        } else if (name === "newName") {
+            setNewName(value)
         }
     }
 
@@ -107,6 +129,20 @@ export default function WorkoutPage(props) {
 
     return (
         <div>
+            <span>
+                {
+                    newNameActive && (
+                        <>
+                            <input type="text" value={newName} onChange={e => handleFormChange(e, 0)} name="newName"/>
+                            <button onClick={saveNewName}>Save new name</button>
+                        </>
+                    )
+                }
+                {!newNameActive && 
+                    (<><h1>{workout.name}</h1>
+                    <button onClick={() => setNewNameActive(true)}>Edit name of workout</button></>)
+                }
+            </span>
             <button onClick={() => toggleNewExerciseActive()}>Add an exercise</button>
             <button onClick={() => cancelWorkout()}>Cancel workout</button>
             {
