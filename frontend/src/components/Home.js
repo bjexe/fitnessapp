@@ -36,7 +36,6 @@ export default function Home() {
 
     // states
     const [showModal, setShowModal] = React.useState(false)
-    const [showWorkoutModal, setShowWorkoutModal] = React.useState(false)
     const [showTemplatesModal, setShowTemplatesModal] = React.useState(false)
     const [templateFormData, setTemplateFormData] = React.useState({
         name: "",
@@ -56,12 +55,6 @@ export default function Home() {
         getTemplates()
         getPastWorkouts()
     }, [])
-
-    async function postDummyWorkout(event) {
-        event.preventDefault()
-        const res = await comms.createWorkout(workoutData)
-        getPastWorkouts()
-    }
 
     // functions for creating a workout template
     function openTemplateModal() {
@@ -131,15 +124,6 @@ export default function Home() {
         })
     }
 
-    // functions for viewing 'recent workouts', will be implemented when database is up and this app has access to it through an API
-    function openWorkoutModal() {
-        setShowWorkoutModal(true)
-    }
-
-    function closeWorkoutModal () {
-        setShowWorkoutModal(false)
-    }
-
     //functions for starting workouts
     function openWorkoutTemplateModal() {
         setShowTemplatesModal(true)
@@ -187,6 +171,14 @@ export default function Home() {
         navigate('/workout')
     }
 
+    function startEmptyWorkout(event){ 
+        workout.update({
+            name: "",
+            exercises: []
+        })
+        navigate('/workout')
+    }
+
     const formInputs = templateFormData.exercises.map((exercise, index) => {
 
         const sets = exercise.sets.map((set, setIndex) => {
@@ -220,7 +212,6 @@ export default function Home() {
     })
 
     const templateSelections = templates.map((template, index) => {
-        /*onClick={beginWorkout(template)}*/ //to be implemented when react router is learned
         return (
             <button name={template.id} onClick={e => startWorkoutFromTemplate(e)} >{template.name ? template.name : "Unnamed Template"}</button> 
         )
@@ -238,8 +229,6 @@ export default function Home() {
                     <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
                         Create a workout template
                     </button>
-                    <button onClick={e => postDummyWorkout(e)} >Submit dummy workout</button>
-                    <button onClick={() => comms.printToken()}>Print token from comms</button>
                     <Modal
                         isOpen={showModal}
                         onRequestClose={closeModal}
@@ -259,7 +248,7 @@ export default function Home() {
                         Start workout from template
                     </button>
 
-                    <button onClick={openWorkoutModal} name="newWorkout" style={buttonStyle}>Start a new workout</button>
+                    <button onClick={startEmptyWorkout} name="newWorkout" style={buttonStyle}>Start workout from scratch</button>
 
                     <Modal
                         isOpen={showTemplatesModal}
@@ -271,10 +260,6 @@ export default function Home() {
                         <h2>Select a template to begin</h2>
                         {templateSelections}
                     </Modal>
-
-                    <button style = {buttonStyle} onClick={openWorkoutModal} name="startEmpty">
-                        Start empty workout
-                    </button>
 
                 </div>
                 
