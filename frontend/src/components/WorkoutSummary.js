@@ -5,6 +5,9 @@ import './WorkoutSummary.css'
 import {GiWeightLiftingUp} from 'react-icons/gi'
 import {FiClock, FiCalendar} from 'react-icons/fi'
 import {IconContext, iconContext} from 'react-icons'
+import {BsTrash} from 'react-icons/bs'
+import comms from '../services/comms'
+import { Navigate } from 'react-router-dom'
 
 function getTimeDifference(start, end) {
     let seconds = (end.getTime() - start.getTime()) / 1000
@@ -14,10 +17,15 @@ function getTimeDifference(start, end) {
     return hours > 0 ? `${hours} hr(s) ${minutes} min` : `${minutes} min`
 }
 
-export default function WorkoutSummary({data}) {
+export default function WorkoutSummary({data, getPastWorkouts}) {
 
     const endDate = new Date(data.endDate)
     const startDate = new Date(data.startDate)
+
+    function deleteSummary() {
+        comms.deleteWorkout(data.id)
+        getPastWorkouts()
+    }
 
     let totalWeightLifted = 0
     data.exercises.forEach((exercise, index) => {
@@ -49,7 +57,11 @@ export default function WorkoutSummary({data}) {
         <IconContext.Provider value={{style: {verticalAlign: '-6%'}}}>
             <div className='card-container'>
                 <div className='header'>
-                    <h1>{data.name ? data.name : "Custom Exercise"}</h1>
+                    <span>
+                        <h1>{data.name ? data.name : "Custom Exercise"}</h1>
+                        <p onClick={deleteSummary}><BsTrash/></p>
+                    </span>
+                    
                     <p><FiCalendar/> {endDate.toDateString()}</p>
                     <span className='stats'>
                         <p><FiClock/> {getTimeDifference(startDate, endDate)}</p>

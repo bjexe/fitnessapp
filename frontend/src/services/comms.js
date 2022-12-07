@@ -41,6 +41,13 @@ function updateWorkout(id, workout) {
     return request.then(response => response.data)
 }
 
+function deleteWorkout(id) {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = axios.delete(`${workoutBaseUrl}/${id}`, config)
+}
+
 async function getAllUserTemplates() {
     const config = {
         headers: {Authorization: token}
@@ -64,4 +71,4 @@ function updateTemplate(id, template) {
     const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
 }
 
-export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}
+export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}

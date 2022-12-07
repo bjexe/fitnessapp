@@ -73,3 +73,5 @@ GET http://localhost:3001/api/workouts
 
 ###
 
+DELETE http://localhost:3001/api/workouts/test
+

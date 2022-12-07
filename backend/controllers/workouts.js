@@ -71,4 +71,33 @@ workoutsRouter.post(`/`, async (request, response) => {
     response.json(savedWorkout)
 })
 
+workoutsRouter.delete(`/:id`, async (request, response) => {
+    const body = request.body
+    const workoutId = request.params.id
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "Token is either invalid or missing"})
+    }
+
+    const user = await User.findById(decodedToken.id)
+    if(!user) {
+        return response.status(400).json({
+            error: 'User not found'
+        })
+    }
+    
+    await User.updateOne({_id: user.id}, {
+        $pullAll: {
+            workouts: [workoutId]
+        }
+    })
+
+    await Workout.findByIdAndDelete(workoutId)
+
+    response.status(200)
+
+})
+
 module.exports = workoutsRouter

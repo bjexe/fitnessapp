@@ -204,7 +204,7 @@ export default function Home() {
 
     const recentWorkouts = pastWorkouts.map((workout) => {
         return (
-            <WorkoutSummary data={workout} />
+            <WorkoutSummary data={workout} getPastWorkouts={getPastWorkouts}/>
         )
     })
 
