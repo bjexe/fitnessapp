@@ -2,6 +2,7 @@ import React from 'react'
 import { useWorkout } from '../context/WorkoutContext'
 import { useNavigate } from 'react-router-dom'
 import comms from '../services/comms'
+import './WorkoutPage.css'
 
 export default function WorkoutPage(props) {
 
@@ -121,7 +122,7 @@ export default function WorkoutPage(props) {
             <div>
                 <h2>{exercise.name}</h2>
                 <p>numSets: {exercise.sets.length}</p>
-                <button onClick={e => addSet(e, index)}>Add set</button>
+                <button onClick={e => addSet(e, index)} className="btn">Add set</button>
                 {workoutForms[index]}
             </div>
         )
@@ -134,29 +135,28 @@ export default function WorkoutPage(props) {
                     newNameActive && (
                         <>
                             <input type="text" value={newName} onChange={e => handleFormChange(e, 0)} name="newName"/>
-                            <button onClick={saveNewName}>Save new name</button>
+                            <button onClick={saveNewName} className="btn">Save new name</button>
                         </>
                     )
                 }
                 {!newNameActive && 
                     (<><h1>{workout.name}</h1>
-                    <button onClick={() => setNewNameActive(true)}>Edit name of workout</button></>)
+                    <button onClick={() => setNewNameActive(true)} className="btn">Edit name of workout</button></>)
                 }
             </span>
-            <button onClick={() => toggleNewExerciseActive()}>Add an exercise</button>
-            <button onClick={() => cancelWorkout()}>Cancel workout</button>
+            <button onClick={() => toggleNewExerciseActive()} className="btn">Add an exercise</button>
+            <button onClick={() => cancelWorkout()} className="btn">Cancel workout</button>
             {
                 newExerciseActive && 
                 <form onSubmit={addExercise}>
                     <input name="newExercise" value={newExercise} onChange={handleFormChange} placeholder={"Name of new exercise"}/>
-                    <button>Add exercise to workout</button>
-                    <button type="button" onClick={toggleNewExerciseActive}>Cancel</button>
+                    <button className="btn">Add exercise to workout</button>
+                    <button type="button" onClick={toggleNewExerciseActive} className="btn">Cancel</button>
                 </form>
             }
-            <h1>{workout ? workout.name : 'Custom workout'}</h1>
             <form onSubmit={(e) => finishWorkout(e)}>
                 {workoutBody}
-                <button>Finish workout</button>
+                <button className="btn">Finish workout</button>
             </form>
         </div>
     )

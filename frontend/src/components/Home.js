@@ -12,6 +12,7 @@ Modal.setAppElement('#root')
 
 const modalStyles = {
     content: {
+      backgroundColor: '#91C6E3',
       top: '50%',
       left: '50%',
       right: 'auto',
@@ -22,10 +23,6 @@ const modalStyles = {
       overflowy: 'scroll',
       maxHeight: '80%'
     },
-}
-
-const buttonStyle = {
-    height: '100px'
 }
 
 export default function Home() {
@@ -198,7 +195,7 @@ export default function Home() {
                     <p>Name: </p>
                     <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
                 </span>
-                <button onClick={(e) => addSet(e, index)}>Add a set</button>
+                <button className="btn" onClick={(e) => addSet(e, index)}>Add a set</button>
                 {sets}
                 <hr/>
             </div>
@@ -213,7 +210,7 @@ export default function Home() {
 
     const templateSelections = templates.map((template, index) => {
         return (
-            <button name={template.id} onClick={e => startWorkoutFromTemplate(e)} >{template.name ? template.name : "Unnamed Template"}</button> 
+            <button name={template.id} onClick={e => startWorkoutFromTemplate(e)} className="btn">{template.name ? template.name : "Unnamed Template"}</button> 
         )
     })
 
@@ -226,7 +223,7 @@ export default function Home() {
 
             <div className='content'>
                 <div className='menu'>
-                    <button onClick={openTemplateModal} name="create-template" style={buttonStyle}>
+                    <button onClick={openTemplateModal} name="create-template" className="btn">
                         Create a workout template
                     </button>
                     <Modal
@@ -238,17 +235,17 @@ export default function Home() {
                         <form onSubmit={handleTemplateSubmit}>
                             {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
                             <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
-                            <button type="button" onClick={addExercise}>Add an exercise</button>
+                            <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
                             {formInputs}
-                            <button>Submit template</button>
+                            <button className="btn">Submit template</button>
                         </form>
                     </Modal>
 
-                    <button onClick={openWorkoutTemplateModal} name="startTemplate" style={buttonStyle}>
+                    <button onClick={openWorkoutTemplateModal} name="startTemplate" className="btn">
                         Start workout from template
                     </button>
 
-                    <button onClick={startEmptyWorkout} name="newWorkout" style={buttonStyle}>Start workout from scratch</button>
+                    <button onClick={startEmptyWorkout} name="newWorkout" className="btn">Start workout from scratch</button>
 
                     <Modal
                         isOpen={showTemplatesModal}
