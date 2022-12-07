@@ -44,7 +44,8 @@ export default function WorkoutPage(props) {
         setNewExerciseActive(old => !old)
     }
 
-    function addSet(index) {
+    function addSet(event, index) {
+        event.preventDefault()
         setWorkout((oldWorkout) => {
             let newWorkout = {...oldWorkout}
             newWorkout.exercises[index].sets.push({reps: 0, weight: 0})
@@ -98,7 +99,7 @@ export default function WorkoutPage(props) {
             <div>
                 <h2>{exercise.name}</h2>
                 <p>numSets: {exercise.sets.length}</p>
-                <button onClick={e => addSet(index)}>Add set</button>
+                <button onClick={e => addSet(e, index)}>Add set</button>
                 {workoutForms[index]}
             </div>
         )
