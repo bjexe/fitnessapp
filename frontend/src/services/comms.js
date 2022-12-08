@@ -1,6 +1,7 @@
 import axios from 'axios'
 const workoutBaseUrl = '/api/workouts'
 const templateBaseUrl = '/api/templates'
+const userInfoBaseUrl = '/api/userInfo'
 
 let token = null
 
@@ -72,4 +73,12 @@ function updateTemplate(id, template) {
     const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
 }
 
-export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate}
+async function updateWeight(weight) {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = await axios.put(`${userInfoBaseUrl}/weight`, {value: weight}, config)
+    return request.data
+}
+
+export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate, updateWeight}

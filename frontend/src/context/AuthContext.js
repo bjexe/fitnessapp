@@ -7,22 +7,38 @@ let AuthContext = React.createContext(null)
 
 // auth.user.token
 function AuthProvider({children}) {
+
     const [user, setUser] = React.useState({
         token: null,
         user: null
     })
+
     const signout = () => {
         setUser(null)
     }
+
     async function signin(loginFormData) {
         const res = await login(loginFormData)
+        console.log(res)
         setUser({
             token: res.token,
-            username: res.username
+            username: res.username,
+            weight: res.weight
         })
         comms.setToken(res.token)
     }
-    let value = {user, signin, signout}
+
+    function updateWeight(newWeight) {
+        setUser(oldUser => {
+            const newUser = {
+                ...oldUser,
+                weight: newWeight
+            }
+            return newUser
+        })
+    }
+    
+    let value = {user, signin, signout, updateWeight}
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

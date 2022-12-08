@@ -48,6 +48,9 @@ export default function Home() {
 
     const [templates, setTemplates] = React.useState([])
 
+    const [bodyWeight, setBodyWeight] = React.useState(0)
+    const [showUpdateBodyWeight, setShowUpdateBodyWeight] = React.useState(false)
+
     React.useEffect(() => {
         getTemplates()
         getPastWorkouts()
@@ -176,6 +179,17 @@ export default function Home() {
         navigate('/workout')
     }
 
+    function handleBodyWeightChange(event) {
+        const {value} = event.target
+        setBodyWeight(value)
+    }
+
+    async function handleBodyWeightSubmit() {
+        setShowUpdateBodyWeight(false)
+        const updatedWeight = await comms.updateWeight(bodyWeight)
+        auth.updateWeight(updatedWeight)
+    }
+
     const formInputs = templateFormData.exercises.map((exercise, index) => {
 
         const sets = exercise.sets.map((set, setIndex) => {
@@ -222,7 +236,15 @@ export default function Home() {
             </nav>
 
             <div className='content'>
+                <div className='stats'>
+                    <p>Current weight: {auth.user.weight[auth.user.weight.length - 1].value} lbs</p>
+                </div>
                 <div className='menu'>
+
+                    {!showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(true)} className='btn'>Update body weight</button>}
+                    {showUpdateBodyWeight && <input value={bodyWeight} onChange={e => handleBodyWeightChange(e)} name="bodyWeight" placeholder="Enter new bodyweight"/>}
+                    {showUpdateBodyWeight && <button onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
+
                     <button onClick={openTemplateModal} name="create-template" className="btn">
                         Create a workout template
                     </button>
