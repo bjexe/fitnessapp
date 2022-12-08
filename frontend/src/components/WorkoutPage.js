@@ -14,7 +14,7 @@ export default function WorkoutPage(props) {
     const [newExerciseActive, setNewExerciseActive] = React.useState(false)
     const [newName, setNewName] = React.useState(workout.name)
     const [newNameActive, setNewNameActive] = React.useState(false)
-
+    
     React.useEffect(() => {
         if(!workout.name){ 
             setWorkout((oldWorkout) => {
@@ -22,6 +22,9 @@ export default function WorkoutPage(props) {
                 return newWorkout
             })
         }
+        setWorkout((oldWorkout) => {
+            return {...oldWorkout, startDate: new Date()}
+        })
     }, [])
 
     function cancelWorkout() {

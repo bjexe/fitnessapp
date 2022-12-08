@@ -217,7 +217,8 @@ export default function Home() {
         <div className='home'>
 
             <nav className='home-nav'>
-                yacked
+                <h1>yacked</h1>
+                <p>Logged in as {auth.user.username}</p>
             </nav>
 
             <div className='content'>
@@ -231,13 +232,15 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "create a new workout template"
                     >
-                        <form onSubmit={handleTemplateSubmit}>
-                            {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
-                            <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
-                            <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
-                            {formInputs}
-                            <button className="btn">Submit template</button>
-                        </form>
+                        <div className='template-modal'>
+                            <form onSubmit={handleTemplateSubmit}>
+                                {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
+                                <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
+                                <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
+                                {formInputs}
+                                <button className="btn">Submit template</button>
+                            </form>
+                        </div>   
                     </Modal>
 
                     <button onClick={openWorkoutTemplateModal} name="startTemplate" className="btn">
