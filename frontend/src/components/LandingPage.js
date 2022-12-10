@@ -1,8 +1,6 @@
 import React from 'react'
 import './LandingPage.css'
 import register from '../services/register'
-import login from '../services/login'
-import comms from '../services/comms'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../context/AuthContext'
 

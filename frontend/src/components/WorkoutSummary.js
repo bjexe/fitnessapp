@@ -5,7 +5,6 @@ import {FiClock, FiCalendar} from 'react-icons/fi'
 import {IconContext, iconContext} from 'react-icons'
 import {BsTrash} from 'react-icons/bs'
 import comms from '../services/comms'
-import { Navigate } from 'react-router-dom'
 
 function getTimeDifference(start, end) {
     let seconds = (end.getTime() - start.getTime()) / 1000
