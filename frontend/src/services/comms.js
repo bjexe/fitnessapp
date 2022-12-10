@@ -81,4 +81,12 @@ async function updateWeight(weight) {
     return request.data
 }
 
-export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate, updateWeight}
+async function updateSettings(settings) {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = await axios.put(`${userInfoBaseUrl}/settings`, {settings: settings}, config)
+    return request.data
+}
+
+export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate, updateWeight, updateSettings}

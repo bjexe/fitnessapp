@@ -1,12 +1,14 @@
 const mongoose = require('mongoose')
+const settingsSchema = require('./schemas/settings')
 
 const userSchema = new mongoose.Schema({
     username: String,
+    settings: settingsSchema,
     name: String,
     passwordHash: String,
     weight: [{date: Date, value: Number}],
-    workouts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Workout'}], // store IDs of workouts for access to them from a user page
-    templates: [{type: mongoose.Schema.Types.ObjectId, ref: 'Template'}] // also for templates
+    workouts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Workout'}],
+    templates: [{type: mongoose.Schema.Types.ObjectId, ref: 'Template'}]
 })
 
 userSchema.set('toJSON', {

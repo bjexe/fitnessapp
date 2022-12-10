@@ -1,12 +1,12 @@
 import React from 'react'
 import WorkoutSummary from './WorkoutSummary'
-import workoutData from '../exampleWorkoutData'
 import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
 import {useAuth} from '../context/AuthContext'
 import {useNavigate} from 'react-router-dom'
 import {useWorkout} from '../context/WorkoutContext'
+import {Link} from 'react-router-dom'
 
 Modal.setAppElement('#root')
 
@@ -231,13 +231,18 @@ export default function Home() {
         <div className='home'>
 
             <nav className='home-nav'>
-                <h1>yacked</h1>
-                <p>Logged in as {auth.user.username}</p>
+                <div className='logo'>
+                    <h1>yacked</h1>
+                </div>
+                <div className='user-info'>
+                    <p>Logged in as {auth.user.username}</p>
+                    <Link to='/settings'>Settings</Link>
+                </div>
             </nav>
 
             <div className='content'>
                 <div className='stats'>
-                    <p>Current weight: {auth.user.weight[auth.user.weight.length - 1].value} lbs</p>
+                    <p> Current weight: { auth.user.weight.length <= 0 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
                 </div>
                 <div className='menu'>
 

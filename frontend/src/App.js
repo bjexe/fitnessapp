@@ -1,13 +1,14 @@
 import './App.css'
 import LandingPage from './components/LandingPage'
 import WorkoutPage from './components/WorkoutPage'
+import SettingsPage from './components/SettingsPage'
 import Home from './components/Home'
 import React from 'react'
 import {
-  Routes, Route, Link, useNavigate, useLocation, Outlet, Navigate
+  Routes, Route
 } from "react-router-dom"
-import {AuthContext, AuthProvider, useAuth, AuthStatus, RequireAuth} from './context/AuthContext'
-import {WorkoutContext, WorkoutProvider, useWorkout} from './context/WorkoutContext'
+import {AuthProvider, RequireAuth} from './context/AuthContext'
+import {WorkoutProvider} from './context/WorkoutContext'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route index element={<LandingPage/>}/>
           <Route path="/home" element={<RequireAuth><Home/></RequireAuth>}/>
           <Route path="/workout" element={<RequireAuth><WorkoutPage/></RequireAuth>}/>
+          <Route path="/settings" element={<RequireAuth><SettingsPage/></RequireAuth>}/>
         <Route path="*" element={<h1>404</h1>}/>
       </Routes>
       </WorkoutProvider>

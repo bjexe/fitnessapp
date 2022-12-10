@@ -5,7 +5,6 @@ import {Navigate} from 'react-router-dom'
 
 let AuthContext = React.createContext(null)
 
-// auth.user.token
 function AuthProvider({children}) {
 
     const [user, setUser] = React.useState({
@@ -19,11 +18,13 @@ function AuthProvider({children}) {
 
     async function signin(loginFormData) {
         const res = await login(loginFormData)
-        console.log(res)
-        setUser({
-            token: res.token,
-            username: res.username,
-            weight: res.weight
+        setUser(() => {
+            return {
+                token: res.token,
+                username: res.username,
+                weight: res.weight,
+                settings: res.settings
+            }
         })
         comms.setToken(res.token)
     }
@@ -37,8 +38,18 @@ function AuthProvider({children}) {
             return newUser
         })
     }
+
+    function updateSettings(newSettings) {
+        setUser(oldUser => {
+            const newUser = {
+                ...oldUser,
+                settings: newSettings
+            }
+            return newUser
+        })
+    }
     
-    let value = {user, signin, signout, updateWeight}
+    let value = {user, signin, signout, updateWeight, updateSettings}
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
