@@ -34,6 +34,10 @@ app.use('/api/register', registerRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/userInfo', userInfoRouter)
 
+app.get('*', (req, res) => {
+    res.sendFile('index.html', {root: 'build'})
+})
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

@@ -4,7 +4,7 @@ import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
 import {useAuth} from '../context/AuthContext'
-import {unstable_HistoryRouter, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {useWorkout} from '../context/WorkoutContext'
 import {Link} from 'react-router-dom'
 
