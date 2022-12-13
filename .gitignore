@@ -29,3 +29,8 @@ images/
 *.png
 *.jpg
 *.ico
+
+# fly
+*.dockerignore
+fly.toml
+Dockerfile
