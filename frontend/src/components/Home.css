@@ -80,3 +80,8 @@ body{
     display: flex;
     justify-content: center;
 }
+
+.workout-values {
+    display: flex;
+    justify-content: space-evenly;
+}

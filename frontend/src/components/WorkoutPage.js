@@ -108,8 +108,14 @@ export default function WorkoutPage(props) {
             return (
                 <div>
                     <p>Set #{setIndex+1}</p>
-                    <input value={set.weight} name="weight" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
-                    <input value={set.reps} name="reps" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                    <span className="workout-values">
+                        <input value={set.weight} name="weight" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
+                        <p>lbs</p>
+                    </span>
+                    <span className="workout-values">
+                        <input value={set.reps} name="reps" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                        <p>reps</p>
+                    </span>
                 </div>
             )
         })

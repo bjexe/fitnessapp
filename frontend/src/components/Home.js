@@ -4,7 +4,7 @@ import Modal from 'react-modal'
 import comms from '../services/comms'
 import './Home.css'
 import {useAuth} from '../context/AuthContext'
-import {useNavigate} from 'react-router-dom'
+import {unstable_HistoryRouter, useNavigate} from 'react-router-dom'
 import {useWorkout} from '../context/WorkoutContext'
 import {Link} from 'react-router-dom'
 
@@ -196,8 +196,14 @@ export default function Home() {
             return (
                 <div>
                     <p>Set {setIndex + 1}:</p>
-                    <input name="weight" value = {set.weight} onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
-                    <input name="reps" value = {set.reps} onChange = {e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                    <span className="workout-values">
+                        <input name="weight" value = {set.weight} onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
+                        <p>lbs</p>
+                    </span>
+                    <span className="workout-values">
+                        <input name="reps" value = {set.reps} onChange = {e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
+                        <p>reps</p>
+                    </span>
                 </div>
             )
         })

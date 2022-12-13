@@ -8,10 +8,10 @@ node_modules/
 
 # testing
 /coverage
+Test.js
 
 # production
 build/
-
 *.env
 
 # misc

@@ -28,3 +28,8 @@
     background-color: #065dd8;
     transform: translateY(-2px);
 }
+
+.workout-values{
+    display: flex;
+    justify-content: space-evenly;
+}
