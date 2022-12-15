@@ -314,6 +314,7 @@ export default function Home() {
                     {!showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(true)} className='btn'>Update body weight</button>}
                     {showUpdateBodyWeight && <input value={bodyWeight} onChange={e => handleBodyWeightChange(e)} name="bodyWeight" placeholder="Enter new bodyweight"/>}
                     {showUpdateBodyWeight && <button onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
+                    {showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(false)}>Cancel</button>}
 
                     <button onClick={openTemplateModal} name="create-template" className="btn">
                         Create a workout template
