@@ -350,8 +350,11 @@ export default function Home() {
                         templateManagementBody.active && 
                         <div>
                             <div>
-                                <button>Cancel</button>
-                                <button>Clear selections</button>
+                                <button onClick={() => {
+                                    setTemplateManagementBody({active: false, op: ''})
+                                    setTemplateManagementSelections([])
+                                    }}>Cancel</button>
+                                <button onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
                             </div>
                             <div>
                                 {templateManagementSelectionsButtons}
