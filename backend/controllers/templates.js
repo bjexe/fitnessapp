@@ -25,10 +25,8 @@ templatesRouter.get(`/`, async (request, response) => {
 // })
 
 // delete a template by id
-templatesRouter.delete(`/del/:id`, async (request, response) => {
-    // Template.findByIdAndRemove(request.params.id)
-    //     .then(response.status(204).end())
-    //     .catch(err => console.log(err))
+templatesRouter.delete(`/:id`, async (request, response) => {
+    const templateId = request.params.id
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
     if(!decodedToken.id) {
@@ -40,7 +38,13 @@ templatesRouter.delete(`/del/:id`, async (request, response) => {
             error: 'User not found'
         })
     }
-    user.templates.pull({_id: request.params.id})
+    await User.updateOne({_id: user.id}, {
+        $pullAll: {
+            templates: [templateId]
+        }
+    })
+    const deletedTemplate = await Template.findByIdAndDelete(templateId)
+    response.json(deletedTemplate)
 })
 
 // get all templates tied to a user

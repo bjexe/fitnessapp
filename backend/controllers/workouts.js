@@ -72,7 +72,6 @@ workoutsRouter.post(`/`, async (request, response) => {
 
 // delete a workout
 workoutsRouter.delete(`/:id`, async (request, response) => {
-    const body = request.body
     const workoutId = request.params.id
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)

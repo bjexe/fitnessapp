@@ -34,6 +34,7 @@ export default function Home() {
     // states
     const [showModal, setShowModal] = React.useState(false)
     const [showTemplatesModal, setShowTemplatesModal] = React.useState(false)
+    const [showTemplateManagementModal, setShowTemplateManagementModal] = React.useState(false)
     const [templateFormData, setTemplateFormData] = React.useState({
         name: "",
         exercises: [{
@@ -50,6 +51,8 @@ export default function Home() {
 
     const [bodyWeight, setBodyWeight] = React.useState(0)
     const [showUpdateBodyWeight, setShowUpdateBodyWeight] = React.useState(false)
+    const [templateManagementBody, setTemplateManagementBody] = React.useState({active: false, op: ""})
+    const [templateManagementSelections, setTemplateManagementSelections] = React.useState([])
 
     React.useEffect(() => {
         getTemplates()
@@ -136,8 +139,9 @@ export default function Home() {
     async function handleTemplateSubmit(event) {
         event.preventDefault()
         try{
-            const res = await comms.createTemplate(templateFormData)
+            await comms.createTemplate(templateFormData)
             getTemplates()
+            closeModal()
         } catch (exception) {
             console.log(`failed to submit template`)
         }
@@ -190,6 +194,51 @@ export default function Home() {
         auth.updateWeight(updatedWeight)
     }
 
+    function openTemplateManagementModal(){ 
+        setShowTemplateManagementModal(true)
+    }
+
+    function closeTemplateManagementModal() {
+        setShowTemplateManagementModal(false)
+    }
+
+    function handleTemplateManagementSubmit(event) {
+        event.preventDefault()
+
+        if(templateManagementBody.op === 'del') {
+            templateManagementSelections.forEach((template) => {
+                comms.deleteTemplate(template.id)
+            })
+            getTemplates()
+        } else if(templateManagementBody.op === 'edit') {
+            templateManagementSelections.forEach((template) => {
+                comms.updateTemplate(template.id, templateFormData)
+            })
+            getTemplates()
+        } else {
+            console.log('no op detected')
+        }
+
+        setTemplateManagementBody({active: false, op: ""})
+    }
+
+    function handleTemplateManagementClick(event){
+        const {name} = event.target
+        if(templateManagementSelections.filter(template => template.id === name).length > 0) {
+            setTemplateManagementSelections(old => {
+                const ret = old.filter(template => template.id !== name)
+                return ret
+            })
+        } else {
+            setTemplateManagementSelections((old) => {
+                const ret = [...old]
+                ret.push(templates.find(template => template.id === name))
+                return ret
+            })
+        }
+        
+    }
+
     const formInputs = templateFormData.exercises.map((exercise, index) => {
 
         const sets = exercise.sets.map((set, setIndex) => {
@@ -230,6 +279,16 @@ export default function Home() {
     const templateSelections = templates.map((template, index) => {
         return (
             <button name={template.id} onClick={e => startWorkoutFromTemplate(e)} className="btn">{template.name ? template.name : "Unnamed Template"}</button> 
+        )
+    })
+
+    const templateManagementSelectionsButtons = templates.map((template, index) => {
+        let isSelected = false
+        if(templateManagementSelections.filter(selection => template.id === selection.id).length > 0) {
+            isSelected = true
+        }
+        return (
+            <button name={template.id} onClick={e => (handleTemplateManagementClick(e))} className={isSelected ? 'btn-green' : 'btn'}>{template.name ? template.name : "Unnamed Template"}</button>
         )
     })
 
@@ -274,6 +333,33 @@ export default function Home() {
                                 <button className="btn">Submit template</button>
                             </form>
                         </div>   
+                    </Modal>
+
+                    <button className="btn" onClick={openTemplateManagementModal} name="openTemplateManagementModal">Manage your templates</button>
+                    <Modal
+                        isOpen={showTemplateManagementModal}
+                        onRequestClose={closeTemplateManagementModal}
+                        style={modalStyles}
+                        contentLabel = "manage your templates"
+                    >
+                        <button onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>
+                        <button onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>
+                        {
+                        templateManagementBody.active && 
+                        <div>
+                            <div>
+                                <button>Cancel</button>
+                                <button>Clear selections</button>
+                            </div>
+                            <div>
+                                {templateManagementSelectionsButtons}
+                            </div>
+                            <div>
+                                <button onClick={ e => handleTemplateManagementSubmit(e)}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' This CANNOT be reversed' : ''}`}</button>
+                            </div>
+
+                        </div>
+                        }
                     </Modal>
 
                     <button onClick={openWorkoutTemplateModal} name="startTemplate" className="btn">
