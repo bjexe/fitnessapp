@@ -200,6 +200,7 @@ export default function Home() {
 
     function closeTemplateManagementModal() {
         setShowTemplateManagementModal(false)
+        getTemplates()
     }
 
     function handleTemplateManagementSubmit(event) {
