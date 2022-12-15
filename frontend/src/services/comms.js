@@ -66,11 +66,12 @@ async function createTemplate(template) {
     return response.data
 }
 
-function updateTemplate(id, template) {
+async function updateTemplate(id, template) {
     const config = {
         headers: {Authorization: token}
     }
-    const request = axios.put(`${templateBaseUrl}/${id}`, template, config)
+    const request = await axios.put(`${templateBaseUrl}/${id}`, template, config)
+    return request.data
 }
 
 async function deleteTemplate(id) {

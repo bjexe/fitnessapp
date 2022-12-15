@@ -198,29 +198,34 @@ export default function Home() {
         setShowTemplateManagementModal(true)
     }
 
-    function closeTemplateManagementModal() {
+    async function closeTemplateManagementModal() {
         setShowTemplateManagementModal(false)
-        getTemplates()
+        await getTemplates()
     }
 
-    function handleTemplateManagementSubmit(event) {
+    async function handleTemplateManagementSubmit(event) {
         event.preventDefault()
-
+        const removed = []
         if(templateManagementBody.op === 'del') {
-            templateManagementSelections.forEach((template) => {
-                comms.deleteTemplate(template.id)
+            templateManagementSelections.forEach(async (template) => {
+                removed.push(await comms.deleteTemplate(template.id))
             })
-            getTemplates()
+            setTemplates(old => {
+                const newTemplates = old.filter((template) => {
+                    return !removed.some((entry) => entry.id === template.id)
+                })
+                return newTemplates
+            })
         } else if(templateManagementBody.op === 'edit') {
-            templateManagementSelections.forEach((template) => {
+            templateManagementSelections.forEach(async (template) => {
                 comms.updateTemplate(template.id, templateFormData)
             })
-            getTemplates()
         } else {
             console.log('no op detected')
         }
 
         setTemplateManagementBody({active: false, op: ""})
+        await closeTemplateManagementModal()
     }
 
     function handleTemplateManagementClick(event){
