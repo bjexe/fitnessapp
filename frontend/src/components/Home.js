@@ -148,7 +148,6 @@ export default function Home() {
     }
 
     async function getTemplates(event) {
-        // event.preventDefault()
         try {
             const templatesArray = await comms.getAllUserTemplates()
             setTemplates(templatesArray)
@@ -200,21 +199,17 @@ export default function Home() {
 
     async function closeTemplateManagementModal() {
         setShowTemplateManagementModal(false)
-        await getTemplates()
     }
 
-    async function handleTemplateManagementSubmit(event) {
-        event.preventDefault()
-        const removed = []
+    async function handleTemplateManagementSubmit() {
         if(templateManagementBody.op === 'del') {
+            let templatesDeleted = 0
             templateManagementSelections.forEach(async (template) => {
-                removed.push(await comms.deleteTemplate(template.id))
-            })
-            setTemplates(old => {
-                const newTemplates = old.filter((template) => {
-                    return !removed.some((entry) => entry.id === template.id)
-                })
-                return newTemplates
+                await comms.deleteTemplate(template.id)
+                templatesDeleted++
+                if(templatesDeleted === templateManagementSelections.length) { // could be better done with promises
+                    await getTemplates()
+                }
             })
         } else if(templateManagementBody.op === 'edit') {
             templateManagementSelections.forEach(async (template) => {
@@ -225,7 +220,7 @@ export default function Home() {
         }
 
         setTemplateManagementBody({active: false, op: ""})
-        await closeTemplateManagementModal()
+        closeTemplateManagementModal()
     }
 
     function handleTemplateManagementClick(event){
@@ -365,7 +360,7 @@ export default function Home() {
                                 {templateManagementSelectionsButtons}
                             </div>
                             <div>
-                                <button onClick={ e => handleTemplateManagementSubmit(e)}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' This CANNOT be reversed' : ''}`}</button>
+                                <button onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
                             </div>
 
                         </div>
