@@ -63,37 +63,6 @@ templatesRouter.get(`/user`, async (request, response) => {
     response.json(templates)
 })
 
-templatesRouter.delete(`/test`, async (request, response) => {
-    //const templateId = request.params.id
-    const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    if(!decodedToken.id) {
-        return response.status(401).json({error: "token is missing or invalid"})
-    }
-
-    const user = await User.findById(decodedToken.id)
-
-    if(!user) {
-        return response.status(400).json({
-            error: 'User not found'
-        })
-    }
-
-    if(true) {
-        const template = new Template({name: "testingtesting"})
-        template.save().then(async (savedTemplate) => {
-            //user.templates.push(savedTemplate.id)
-            await User.findByIdAndUpdate(userId, {templates: user.templates.concat(savedTemplate._id)})
-            const ret = {user, savedTemplate}
-            response.status(200).json(ret)
-        }).catch(err => console.log(err))
-    }
-
-    if(false) {
-        //User.templates.pull({_id: 12345})
-    }
-})
-
 // update a template by id
 templatesRouter.put(`/:id`, (request, response) => {
     const body = request.body

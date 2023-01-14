@@ -98,4 +98,29 @@ async function updateSettings(settings) {
     return request.data
 }
 
-export default {getAllWorkouts, getAllUserWorkouts, createWorkout, updateWorkout, deleteWorkout, setToken, printToken, getAllUserTemplates, createTemplate, updateTemplate, deleteTemplate, updateWeight, updateSettings}
+async function deleteWeightHistory() {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = await axios.delete(`${userInfoBaseUrl}/weight`, config)
+    return request.data
+}
+
+const exports = {
+    getAllWorkouts,
+    getAllUserWorkouts,
+    createWorkout,
+    updateWorkout,
+    deleteWorkout,
+    setToken,
+    printToken,
+    getAllUserTemplates,
+    createTemplate,
+    updateTemplate,
+    deleteTemplate,
+    updateWeight,
+    updateSettings,
+    deleteWeightHistory
+}
+
+export default exports

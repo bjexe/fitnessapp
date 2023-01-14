@@ -7,6 +7,7 @@ import {useAuth} from '../context/AuthContext'
 import {useNavigate} from 'react-router-dom'
 import {useWorkout} from '../context/WorkoutContext'
 import {Link} from 'react-router-dom'
+import CsvDownloadButton from 'react-json-to-csv'
 
 Modal.setAppElement('#root')
 
@@ -240,6 +241,11 @@ export default function Home() {
         
     }
 
+    function deleteWeightHistory() {
+        comms.deleteWeightHistory()
+        auth.updateWeight([])
+    }
+
     const formInputs = templateFormData.exercises.map((exercise, index) => {
 
         const sets = exercise.sets.map((set, setIndex) => {
@@ -308,7 +314,9 @@ export default function Home() {
 
             <div className='content'>
                 <div className='stats'>
-                    <p> Current weight: { auth.user.weight.length <= 0 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
+                    <p> Current weight: { auth.user.weight.length < 1 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
+                    {auth.user.weight.length > 1 && <CsvDownloadButton data={auth.user.weight} filename="weight_history.csv">Export weight history (csv)</CsvDownloadButton>}
+                    <button onClick={deleteWeightHistory}>Delete weight history</button>
                 </div>
                 <div className='menu'>
 
