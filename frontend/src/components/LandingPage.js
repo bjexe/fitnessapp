@@ -101,7 +101,7 @@ export default function LandingPage() {
                             Password:
                             <input type="password" value={loginFormData.password} onChange={handleLoginChange} name="password"/>
                         </label>
-                        <button className='submit-btn'>Log in</button>
+                        <button className='btn'>Log in</button>
                         {loginStatus === false && <p style={{color: 'red'}}>Invalid credentials</p>}
                         {loginStatus === true && <p style={{color: 'green'}}>Successfully logged in! Redirecting to homepage...</p>}
                     </form>
@@ -122,7 +122,7 @@ export default function LandingPage() {
                     </label>
                     {/* {<input type="checkbox" id="emailNotifs" checked={registerFormData.emailNotifs} onChange={handleRegisterChange} name="emailNotifs"/>
                     <label htmlFor='emailNotifs'>Sign up for email notifications</label>} */}
-                    <button className='submit-btn'>Sign up</button>
+                    <button className='btn'>Sign up</button>
                     {registerStatus === false && <p style={{color: 'red'}}>Error registering. Username may be taken.</p>}
                     {registerStatus === true && <p style={{color: 'green'}}>Successfully signed up!</p>}
                 </form>

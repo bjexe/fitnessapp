@@ -51,14 +51,6 @@ label {
     font-size: 30px;
 }
 
-.submit-btn {
-    background-color: cornflowerblue;
-    font-size: 24px;
-    padding: 14px 40px;
-    border-radius: 20px;
-    
-}
-
 .loginSignupSeparator {
     font-size: 64px;
     color: #e8e9f3;
@@ -81,4 +73,34 @@ form {
     border: 2px solid #fff;
     padding: 25px;
     border-radius: 15px;
+}
+
+.btn {
+    background-color: #0a6bff;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: rgba(1,60,136,.5) 0 -1px 3px 0 inset,rgba(0,44,97,.1) 0 3px 6px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inherit;
+    font-family: "Space Grotesk",-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+    margin: 10px 0px;
+    min-height: 56px;
+    padding: 16px 20px;
+    position: relative;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    transition: all .2s cubic-bezier(.22, .61, .36, 1);
+}
+
+.btn:hover {
+    background-color: #05a305;
+    transform: translateY(-2px);
 }
