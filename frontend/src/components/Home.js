@@ -13,7 +13,7 @@ Modal.setAppElement('#root')
 
 const modalStyles = {
     content: {
-      backgroundColor: '#91C6E3',
+      backgroundColor: '#272635',
       top: '50%',
       left: '50%',
       right: 'auto',
@@ -251,14 +251,14 @@ export default function Home() {
         const sets = exercise.sets.map((set, setIndex) => {
             return (
                 <div>
-                    <p>Set {setIndex + 1}:</p>
+                    <p style={{"color": "#e8e9f3"}}>Set {setIndex + 1}:</p>
                     <span className="workout-values">
                         <input name="weight" value = {set.weight} onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
-                        <p>lbs</p>
+                        <p style={{"color": "#e8e9f3"}}>lbs</p>
                     </span>
                     <span className="workout-values">
                         <input name="reps" value = {set.reps} onChange = {e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
-                        <p>reps</p>
+                        <p style={{"color": "#e8e9f3"}}> reps</p>
                     </span>
                 </div>
             )
@@ -266,9 +266,11 @@ export default function Home() {
 
         return(
             <div key={index}>
-                {exercise.name ? <h1>{exercise.name}</h1> : <h1>Unnamed Exercise</h1>}
+                <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
+                <h1 style={{"color": "#e8e9f3"}}>Exercise #{index + 1}</h1>
+                {exercise.name ? <h1 style={{"color": "#e8e9f3"}}>{exercise.name}</h1> : <h1 style={{"color": "#e8e9f3"}}>Unnamed Exercise</h1>}
                 <span>
-                    <p>Name: </p>
+                    <p style={{"color": "#e8e9f3"}}>Name: </p>
                     <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
                 </span>
                 <button className="btn" onClick={(e) => addSet(e, index)}>Add a set</button>
@@ -303,18 +305,20 @@ export default function Home() {
         <div className='home'>
 
             <nav className='home-nav'>
-                <div className='logo'>
-                    <h1>yacked</h1>
-                </div>
-                <div className='user-info'>
-                    <p>Logged in as {auth.user.username}</p>
-                    <Link to='/settings'>Settings</Link>
+                <div className='home-nav-content'>
+                    <div className='logo'>
+                        <h1 style={{"color": "#e8e9f3", "fontSize": "30px", "margin-left": "50px"}}>yacked</h1>
+                    </div>
+                    <div className='user-info'>
+                        <p style={{"color": "#e8e9f3", "fontSize": "30px"}}>Logged in as {auth.user.username}</p>
+                        <Link to='/settings' style={{"fontSize" : "30px", "marginRight": "50px"}}>Settings</Link>
+                    </div>
                 </div>
             </nav>
 
             <div className='content'>
                 <div className='stats'>
-                    <p> Current weight: { auth.user.weight.length < 1 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
+                    <p style={{"color": "#e8e9f3"}}> Current weight: { auth.user.weight.length < 1 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
                     {auth.user.weight.length > 1 && <CsvDownloadButton data={auth.user.weight} filename="weight_history.csv">Export weight history (csv)</CsvDownloadButton>}
                     <button onClick={deleteWeightHistory}>Delete weight history</button>
                 </div>
@@ -336,7 +340,7 @@ export default function Home() {
                     >
                         <div className='template-modal'>
                             <form onSubmit={handleTemplateSubmit}>
-                                {templateFormData.name ? <h1>{templateFormData.name}</h1> : <h1>Unnamed Template</h1>}
+                                {templateFormData.name ? <h1 style={{"color": "#e8e9f3"}}>{templateFormData.name}</h1> : <h1 style={{"color": "#e8e9f3"}}>Unnamed Template</h1>}
                                 <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
                                 <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
                                 {formInputs}
@@ -397,7 +401,7 @@ export default function Home() {
                 <h1 className='recent-workouts-header'>Recent Workouts</h1>
                 
                 <div className='recent-workouts'>
-                    {recentWorkouts.length ? recentWorkouts : <h2>No workouts yet</h2>}
+                    {recentWorkouts.length ? recentWorkouts : <h2 style={{"color": "#e8e9f3"}}>No workouts yet</h2>}
                 </div>
 
             </div>

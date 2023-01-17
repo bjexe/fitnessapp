@@ -3,6 +3,8 @@ const userInfoRouter = require('express').Router()
 const User = require('../models/user')
 const getTokenFrom = require('../utils/auth')
 const jwt = require('jsonwebtoken')
+const Template = require('../models/template')
+const Workout = require('../models/workout')
 
 userInfoRouter.put('/weight', async (request, response) => {
     
@@ -69,6 +71,22 @@ userInfoRouter.delete('/weight', async (request, response) => {
             response.json(updated.weight)
         })
         .catch(err => console.log(err))
+})
+
+userInfoRouter.delete('/account', async (request, response) => {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id) {
+        return response.status(401).json({error: "token is missing or invalid"})
+    }
+    const user = await User.findById(decodedToken.id)
+    if(!user) {
+        return response.status(400).json({error: "user not found"})
+    }
+    await Template.deleteMany({user: decodedToken.id})
+    await Workout.deleteMany({user: decodedToken.id})
+    await User.findByIdAndDelete(decodedToken.id)
+    response.status(200)
 })
 
 module.exports = userInfoRouter

@@ -15,6 +15,17 @@ body {
     text-align: center;
 }
 
+.home-nav-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-info {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
 .content {
     display: flex;
     justify-content: space-between;
@@ -43,6 +54,7 @@ body {
     text-align: center;
     font-family: 'Abel';
     font-size: 32px;
+    color: #e8e9f3;
 }
 
 .btn {
@@ -115,4 +127,8 @@ body {
 .workout-values {
     display: flex;
     justify-content: space-evenly;
+}
+
+h1 {
+    margin: 0;
 }

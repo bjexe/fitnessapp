@@ -106,6 +106,14 @@ async function deleteWeightHistory() {
     return request.data
 }
 
+function deleteUser() {
+    const config = {
+        headers: {Authorization: token}
+    }
+    axios.delete(`${userInfoBaseUrl}/account`, config)
+    return
+}
+
 const exports = {
     getAllWorkouts,
     getAllUserWorkouts,
@@ -120,7 +128,8 @@ const exports = {
     deleteTemplate,
     updateWeight,
     updateSettings,
-    deleteWeightHistory
+    deleteWeightHistory,
+    deleteUser
 }
 
 export default exports
