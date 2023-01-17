@@ -92,7 +92,7 @@ export default function LandingPage() {
                 </div>
                 <div className="forms">
                     <form onSubmit={handleLoginSubmit}>
-                        <h1 style={{"font-size": "38px", "color": "#e8e9f3"}}>Log in</h1>
+                        <h1 style={{"font-size": "38px", "color": "#e8e9f3", "textAlign": "center"}}>Log in</h1>
                         <label style={{"color": "#e8e9f3"}}>
                             Username:
                             <input type="text" value={loginFormData.username} onChange={handleLoginChange} name="username"/>
@@ -107,7 +107,7 @@ export default function LandingPage() {
                     </form>
                 <h2 className="loginSignupSeparator">or</h2>
                 <form onSubmit={handleRegisterSubmit}>
-                    <h1 style={{"font-size": "38px", "color": "#e8e9f3"}}>Sign up</h1>
+                    <h1 style={{"font-size": "38px", "color": "#e8e9f3", "textAlign": "center"}}>Sign up</h1>
                     <label style={{"color": "#e8e9f3"}}>
                         Username:
                         <input type="text" value={registerFormData.username} onChange={handleRegisterChange} name="username"/>

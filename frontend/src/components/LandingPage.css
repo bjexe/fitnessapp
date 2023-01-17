@@ -55,17 +55,29 @@ label {
     font-size: 24px;
     padding: 14px 40px;
     border-radius: 20px;
+    
 }
 
 .loginSignupSeparator {
     font-size: 64px;
+    color: #e8e9f3;
 }
 
 .forms {
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     width: 75%;
     align-self: center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 50px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #fff;
+    padding: 25px;
+    border-radius: 15px;
 }
