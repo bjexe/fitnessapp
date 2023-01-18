@@ -2,7 +2,7 @@ import React from 'react'
 import './WorkoutSummary.css'
 import {GiWeightLiftingUp} from 'react-icons/gi'
 import {FiClock, FiCalendar} from 'react-icons/fi'
-import {IconContext, iconContext} from 'react-icons'
+import {IconContext} from 'react-icons'
 import {BsTrash} from 'react-icons/bs'
 import comms from '../services/comms'
 

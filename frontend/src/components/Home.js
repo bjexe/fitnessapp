@@ -47,9 +47,7 @@ export default function Home() {
         }]
     })
     const [pastWorkouts, setPastWorkouts] = React.useState([])
-
     const [templates, setTemplates] = React.useState([])
-
     const [bodyWeight, setBodyWeight] = React.useState(0)
     const [showUpdateBodyWeight, setShowUpdateBodyWeight] = React.useState(false)
     const [templateManagementBody, setTemplateManagementBody] = React.useState({active: false, op: ""})
@@ -246,6 +244,11 @@ export default function Home() {
         auth.updateWeight([])
     }
 
+    const purgedWeight = auth.user.weight.length > 1 ? auth.user.weight.map(entry => {
+        delete entry._id
+        return entry
+    }) : []
+
     const formInputs = templateFormData.exercises.map((exercise, index) => {
 
         const sets = exercise.sets.map((set, setIndex) => {
@@ -318,16 +321,16 @@ export default function Home() {
 
             <div className='content'>
                 <div className='stats'>
-                    <p style={{"color": "#e8e9f3"}}> Current weight: { auth.user.weight.length < 1 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
-                    {auth.user.weight.length > 1 && <CsvDownloadButton data={auth.user.weight} filename="weight_history.csv">Export weight history (csv)</CsvDownloadButton>}
-                    <button onClick={deleteWeightHistory}>Delete weight history</button>
+                    <p style={{"color": "#e8e9f3", "fontSize": "32px", "margin": "0"}}> Current weight: { auth.user.weight.length < 1 ? 'No weight tracked' : auth.user.weight[auth.user.weight.length - 1].value } lbs</p>
+                    {auth.user.weight.length > 1 && <CsvDownloadButton data={purgedWeight} filename="weight_history.csv" className='btn'>Export weight history (csv)</CsvDownloadButton>}
+                    <button onClick={deleteWeightHistory} className='btn'>Delete weight history</button>
                 </div>
                 <div className='menu'>
 
                     {!showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(true)} className='btn'>Update body weight</button>}
                     {showUpdateBodyWeight && <input value={bodyWeight} onChange={e => handleBodyWeightChange(e)} name="bodyWeight" placeholder="Enter new bodyweight"/>}
-                    {showUpdateBodyWeight && <button onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
-                    {showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(false)}>Cancel</button>}
+                    {showUpdateBodyWeight && <button className='btn-purple' onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
+                    {showUpdateBodyWeight && <button className='btn-purple' onClick={e => setShowUpdateBodyWeight(false)}>Cancel</button>}
 
                     <button onClick={openTemplateModal} name="create-template" className="btn">
                         Create a workout template
@@ -344,7 +347,7 @@ export default function Home() {
                                 <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
                                 <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
                                 {formInputs}
-                                <button className="btn">Submit template</button>
+                                <button className="btn">Save template</button>
                             </form>
                         </div>   
                     </Modal>
@@ -356,23 +359,23 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "manage your templates"
                     >
-                        <button onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>
-                        <button onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>
+                        {!templateManagementBody.active && <button className='btn-purple' onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>}
+                        {!templateManagementBody.active && <button className='btn-purple' onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>}
                         {
                         templateManagementBody.active && 
                         <div>
                             <div>
-                                <button onClick={() => {
+                                <button className='btn-purple' onClick={() => {
                                     setTemplateManagementBody({active: false, op: ''})
                                     setTemplateManagementSelections([])
                                     }}>Cancel</button>
-                                <button onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
+                                <button className='btn-purple' onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
                             </div>
                             <div>
                                 {templateManagementSelectionsButtons}
                             </div>
                             <div>
-                                <button onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
+                                <button className='btn-purple' onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
                             </div>
 
                         </div>
@@ -392,7 +395,7 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
-                        <h2>Select a template to begin</h2>
+                        <h2 style={{"color": "#e8e9f3"}}>Select a template to begin</h2>
                         {templateSelections}
                     </Modal>
 
