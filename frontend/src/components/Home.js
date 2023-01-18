@@ -126,6 +126,15 @@ export default function Home() {
         })
     }
 
+    function deleteSet(event, index) {
+        event.preventDefault()
+        setTemplateFormData(oldForm => {
+            let newForm = {...oldForm}
+            newForm.exercises[index].sets.pop()
+            return newForm
+        })
+    }
+
     //functions for starting workouts
     function openWorkoutTemplateModal() {
         setShowTemplatesModal(true)
@@ -270,13 +279,17 @@ export default function Home() {
         return(
             <div key={index}>
                 <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
-                <h1 style={{"color": "#e8e9f3"}}>Exercise #{index + 1}</h1>
-                {exercise.name ? <h1 style={{"color": "#e8e9f3"}}>{exercise.name}</h1> : <h1 style={{"color": "#e8e9f3"}}>Unnamed Exercise</h1>}
+                <span style={{"display":"flex", "justifyContent": "center"}}>
+                    <h1 style={{"color": "#e8e9f3"}}>Exercise #{index + 1}: {exercise.name ? exercise.name : "Unnamed Exercise"}</h1>
+                </span>
                 <span>
                     <p style={{"color": "#e8e9f3"}}>Name: </p>
                     <input name="exerciseName" value={exercise.name} onChange={e => handleFormChange(e, index)}/>
                 </span>
-                <button className="btn" onClick={(e) => addSet(e, index)}>Add a set</button>
+                <span style={{"display":"flex", "gap": "32px", "justifyContent": "center"}}>
+                    <button className="btn" onClick={(e) => addSet(e, index)}>Add set</button>
+                    <button className='btn' onClick={e => deleteSet(e, index)}>Delete last set</button>
+                </span>
                 {sets}
             </div>
         )
@@ -310,7 +323,7 @@ export default function Home() {
             <nav className='home-nav'>
                 <div className='home-nav-content'>
                     <div className='logo'>
-                        <h1 style={{"color": "#e8e9f3", "fontSize": "30px", "margin-left": "50px"}}>yacked</h1>
+                        <h1 style={{"color": "#e8e9f3", "fontSize": "50px", "margin-left": "50px"}}>yacked</h1>
                     </div>
                     <div className='user-info'>
                         <p style={{"color": "#e8e9f3", "fontSize": "30px"}}>Logged in as {auth.user.username}</p>
@@ -329,8 +342,10 @@ export default function Home() {
 
                     {!showUpdateBodyWeight && <button onClick={e => setShowUpdateBodyWeight(true)} className='btn'>Update body weight</button>}
                     {showUpdateBodyWeight && <input value={bodyWeight} onChange={e => handleBodyWeightChange(e)} name="bodyWeight" placeholder="Enter new bodyweight"/>}
-                    {showUpdateBodyWeight && <button className='btn-purple' onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
-                    {showUpdateBodyWeight && <button className='btn-purple' onClick={e => setShowUpdateBodyWeight(false)}>Cancel</button>}
+                    <div style={{"display":"flex", "justifyContent": "center", "gap": "32px"}}>
+                        {showUpdateBodyWeight && <button className='btn-purple' onClick={e => handleBodyWeightSubmit(e)}>Submit</button>}
+                        {showUpdateBodyWeight && <button className='btn-purple' onClick={e => setShowUpdateBodyWeight(false)}>Cancel</button>}
+                    </div>
 
                     <button onClick={openTemplateModal} name="create-template" className="btn">
                         Create a workout template
@@ -359,22 +374,24 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "manage your templates"
                     >
-                        {!templateManagementBody.active && <button className='btn-purple' onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>}
-                        {!templateManagementBody.active && <button className='btn-purple' onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>}
+                        <div style={{"display":"flex", "justifyContent":"center", "gap": "32px"}}>
+                            {!templateManagementBody.active && <button className='btn-purple' onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>}
+                            {!templateManagementBody.active && <button className='btn-purple' onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>}
+                        </div>
                         {
                         templateManagementBody.active && 
                         <div>
-                            <div>
+                            <div style={{"display": "flex", "gap": "32px", "justifyContent":"center"}}>
                                 <button className='btn-purple' onClick={() => {
                                     setTemplateManagementBody({active: false, op: ''})
                                     setTemplateManagementSelections([])
                                     }}>Cancel</button>
                                 <button className='btn-purple' onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
                             </div>
-                            <div>
+                            <div style={{"display": "flex", "justifyContent": "center", "gap": "20px", "flexDirection": "column", "alignItems": "center"}}>
                                 {templateManagementSelectionsButtons}
                             </div>
-                            <div>
+                            <div style={{"display": "flex", "justifyContent": "center"}}>
                                 <button className='btn-purple' onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
                             </div>
 
@@ -395,8 +412,10 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
-                        <h2 style={{"color": "#e8e9f3"}}>Select a template to begin</h2>
-                        {templateSelections}
+                        <h2 style={{"color": "#e8e9f3", "textAlign":"center", "fontSize": "50px"}}>Select a template to begin</h2>
+                        <div style={{"display":"flex", "flexDirection": "column", "gap":"20px", "justifyContent": "center", "alignItems":"center"}}>
+                            {templateSelections}
+                        </div>
                     </Modal>
 
                 </div>
