@@ -24,17 +24,15 @@ h2 {
 .card-container {
     max-width: 20%;
     min-width: 350px;
-    background: #46A0D2;
+    background: #006198;
     display: flex;
     flex-direction: column;
-    box-shadow: 15px 15px 0px #006198;
     border-radius: 10px;
 }
 
 .header {
     display: block;
-    align-self: flex-start;
-    margin-left: 50px;
+    margin-top: 0;
 }
 
 .stats {
@@ -48,6 +46,7 @@ h2 {
 .summary {
     display: flex;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .summary-header {

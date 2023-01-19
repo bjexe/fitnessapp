@@ -49,8 +49,8 @@ export default function WorkoutSummary({data, setPastWorkouts}) {
 
         return(
             <span className='exercises'>
-                <p>{exercise.sets.length} x {exercise.name}</p>
-                <p>{exercise.sets[bestSetIndex].weight} lb x {exercise.sets[bestSetIndex].reps} reps</p>
+                <p style={{"color": "#e8e9f3"}}>{exercise.sets.length} x {exercise.name}</p>
+                <p style={{"color": "#e8e9f3"}}>{exercise.sets[bestSetIndex].weight} lb x {exercise.sets[bestSetIndex].reps} reps</p>
             </span>
         )
     })
@@ -59,22 +59,22 @@ export default function WorkoutSummary({data, setPastWorkouts}) {
         <IconContext.Provider value={{style: {verticalAlign: '-6%'}}}>
             <div className='card-container'>
                 <div className='header'>
-                    <span>
-                        <h1>{data.name ? data.name : "Custom Exercise"}</h1>
-                        <p onClick={deleteSummary}><BsTrash/></p>
+                    <span style={{"display" : "flex", "justifyContent": "space-between", "margin": "25px"}}>
+                        <h1 style={{"color": "#e8e9f3"}}>{data.name ? data.name : "Custom Exercise"}</h1>
+                        <BsTrash style={{"width": "25px", "height": "25px", "color": "#e8e9f3"}} onClick={deleteSummary}/>
                     </span>
                     
-                    <p><FiCalendar/> {endDate.toDateString()}</p>
-                    <span className='stats'>
-                        <p><FiClock/> {getTimeDifference(startDate, endDate)}</p>
-                        <p><GiWeightLiftingUp/> {totalWeightLifted} lbs</p>
+                    <p style={{"color": "#e8e9f3"}}><FiCalendar style={{"color": "#e8e9f3"}}/> {endDate.toDateString()}</p>
+                    <span style={{"display": "flex", "marginTop":"10px", "justifyContent": "space-around"}}>
+                        <p style={{"color": "#e8e9f3"}}><FiClock style={{"color": "#e8e9f3"}}/> {getTimeDifference(startDate, endDate)}</p>
+                        <p style={{"color": "#e8e9f3"}}><GiWeightLiftingUp style={{"color": "#e8e9f3"}}/> {totalWeightLifted} lbs</p>
                     </span>
                 </div>
                 
                 <div className='summary'>
                     <span className='summary-header'>
-                        <h2>exercise</h2>
-                        <h2>best set</h2>
+                        <h2 style={{"color": "#e8e9f3"}}>exercise</h2>
+                        <h2 style={{"color": "#e8e9f3"}}>best set</h2>
                     </span>
                     {exercises}
                 </div>
