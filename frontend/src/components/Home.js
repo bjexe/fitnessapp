@@ -52,6 +52,7 @@ export default function Home() {
     const [showUpdateBodyWeight, setShowUpdateBodyWeight] = React.useState(false)
     const [templateManagementBody, setTemplateManagementBody] = React.useState({active: false, op: ""})
     const [templateManagementSelections, setTemplateManagementSelections] = React.useState([])
+    const [templateEditActive, setTemplateEditActive] = React.useState(false)
 
     React.useEffect(() => {
         getTemplates()
@@ -155,6 +156,24 @@ export default function Home() {
         }
     }
 
+    async function handleTemplateUpdate(event){
+        event.preventDefault()
+        try{
+            await comms.updateTemplate(templateFormData.id, templateFormData)
+            getTemplates()
+            setShowTemplateManagementModal(false)
+            setTemplateManagementBody({active: false, op: ''})
+            setTemplateEditActive(false)
+        } catch(exception){
+            console.log('failed to update template')
+            console.log(JSON.stringify(exception, null, 2))
+            getTemplates()
+            setShowTemplateManagementModal(false)
+            setTemplateManagementBody({active: false, op: ''})
+            setTemplateEditActive(false)
+        }
+    }
+
     async function getTemplates(event) {
         try {
             const templatesArray = await comms.getAllUserTemplates()
@@ -207,6 +226,18 @@ export default function Home() {
 
     async function closeTemplateManagementModal() {
         setShowTemplateManagementModal(false)
+        setTemplateManagementBody({active: false, op:''})
+        setTemplateEditActive(false)
+        setTemplateFormData({
+            name: "",
+            exercises: [{
+                name: "",
+                sets: [{
+                    weight: 0,
+                    reps: 0
+                }],
+            }]
+        })
     }
 
     async function handleTemplateManagementSubmit() {
@@ -233,19 +264,24 @@ export default function Home() {
 
     function handleTemplateManagementClick(event){
         const {name} = event.target
-        if(templateManagementSelections.filter(template => template.id === name).length > 0) {
-            setTemplateManagementSelections(old => {
-                const ret = old.filter(template => template.id !== name)
-                return ret
-            })
+        if(templateManagementBody.op === 'del') {
+            if(templateManagementSelections.filter(template => template.id === name).length > 0) {
+                setTemplateManagementSelections(old => {
+                    const ret = old.filter(template => template.id !== name)
+                    return ret
+                })
+            } else {
+                setTemplateManagementSelections((old) => {
+                    const ret = [...old]
+                    ret.push(templates.find(template => template.id === name))
+                    return ret
+                })
+            }
         } else {
-            setTemplateManagementSelections((old) => {
-                const ret = [...old]
-                ret.push(templates.find(template => template.id === name))
-                return ret
-            })
+            // compile form from template id and display it on modal
+            setTemplateFormData(templates.find(template => template.id === name))
+            setTemplateEditActive(true)
         }
-        
     }
 
     function deleteWeightHistory() {
@@ -374,28 +410,53 @@ export default function Home() {
                         style={modalStyles}
                         contentLabel = "manage your templates"
                     >
-                        <div style={{"display":"flex", "justifyContent":"center", "gap": "32px"}}>
+                        {!templateManagementBody.active && <h1 style={{"color": "#e8e9f3", "textAlign":"center", "fontSize": "50px"}}>Select an option below</h1>}
+                        <div style={{"display":"flex", "justifyContent":"center", "gap": "32px", "alignItems":"center"}}>
                             {!templateManagementBody.active && <button className='btn-purple' onClick={e => setTemplateManagementBody({active: true, op: 'del'})}>Delete templates</button>}
-                            {!templateManagementBody.active && <button className='btn-purple' onClick={e => e.preventDefault()}>Edit templates (functionality not implemented yet)</button>}
+                            {!templateManagementBody.active && <button className='btn-purple' onClick={e => setTemplateManagementBody({active: true, op: 'edit'})}>Edit templates</button>}
                         </div>
                         {
-                        templateManagementBody.active && 
-                        <div>
-                            <div style={{"display": "flex", "gap": "32px", "justifyContent":"center"}}>
-                                <button className='btn-purple' onClick={() => {
-                                    setTemplateManagementBody({active: false, op: ''})
-                                    setTemplateManagementSelections([])
-                                    }}>Cancel</button>
-                                <button className='btn-purple' onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
-                            </div>
-                            <div style={{"display": "flex", "justifyContent": "center", "gap": "20px", "flexDirection": "column", "alignItems": "center"}}>
-                                {templateManagementSelectionsButtons}
-                            </div>
-                            <div style={{"display": "flex", "justifyContent": "center"}}>
-                                <button className='btn-purple' onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
-                            </div>
+                            templateManagementBody.active && templateManagementBody.op === 'del' &&
+                            <div>
+                                <h1 style={{"color": "#e8e9f3", "textAlign":"center", "fontSize": "50px"}}>Choose templates to delete</h1>
+                                <div style={{"display": "flex", "gap": "32px", "justifyContent":"center"}}>
+                                    <button className='btn-purple' onClick={() => {
+                                        setTemplateManagementBody({active: false, op: ''})
+                                        setTemplateManagementSelections([])
+                                        }}>Cancel</button>
+                                    <button className='btn-purple' onClick={() => setTemplateManagementSelections([])}>Clear selections</button>
+                                </div>
+                                <div style={{"display": "flex", "justifyContent": "center", "gap": "20px", "flexDirection": "column", "alignItems": "center"}}>
+                                    {templateManagementSelectionsButtons}
+                                </div>
+                                <div style={{"display": "flex", "justifyContent": "center"}}>
+                                    <button className='btn-purple' onClick={handleTemplateManagementSubmit}>{`Confirm ${templateManagementBody.op === 'del' ? 'deletion' : 'editing'}${templateManagementBody.op === 'del' ? ' (This CANNOT be reversed)' : ''}`}</button>
+                                </div>
 
-                        </div>
+                            </div>
+                        }
+                        {
+                            templateManagementBody.active && templateManagementBody.op === 'edit' &&
+                            <div>
+                                {!templateFormData.id && <h1 style={{"color": "#e8e9f3", "textAlign":"center", "fontSize": "50px"}}>Choose a template to edit</h1>}
+                                <div style={{"display": "flex", "gap": "32px", "justifyContent":"center", "flexDirection":"column", "alignItems":"center"}}>
+                                    <button className='btn-purple' onClick={() => {
+                                        setTemplateManagementBody({active: false, op: ''})
+                                        setTemplateEditActive(false)
+                                        }}>Cancel
+                                    </button>
+                                    {!templateEditActive && templateManagementSelectionsButtons}
+                                    {templateEditActive && 
+                                        <form onSubmit={handleTemplateUpdate}>
+                                            {templateFormData.name ? <h1 style={{"color": "#e8e9f3"}}>{templateFormData.name}</h1> : <h1 style={{"color": "#e8e9f3"}}>Unnamed Template</h1>}
+                                            <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
+                                            <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
+                                            {formInputs}
+                                            <button className="btn-purple">Update template</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
                         }
                     </Modal>
 

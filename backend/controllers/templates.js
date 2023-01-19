@@ -76,9 +76,13 @@ templatesRouter.put(`/:id`, (request, response) => {
     }
     Template.findByIdAndUpdate(request.params.id, {
         name: body.name,
-        finished: body.finished,
+        favorite: body.favorite,
         exercises: body.exercises
-    })
+    }, {new: true})
+        .then(updated => {
+            response.json(updated)
+        })
+        .catch(err => console.log(err))
 })
 
 // posting a new template
