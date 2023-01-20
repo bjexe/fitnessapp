@@ -68,6 +68,24 @@ export default function WorkoutPage(props) {
         })
     }
 
+    function deleteSet(event, index){
+        event.preventDefault()
+        setWorkout(oldWorkout => {
+            let newWorkout = {...oldWorkout}
+            newWorkout.exercises[index].sets.pop()
+            return newWorkout
+        })
+    }
+
+    function deleteExercise(event, index) {
+        event.preventDefault()
+        setWorkout(oldWorkout => {
+            let newWorkout = {...oldWorkout}
+            newWorkout.exercises.splice(index, 1)
+            return newWorkout
+        })
+    }
+
     function saveNewName() {
         setWorkout((oldWorkout) => {
             let newWorkout = {...oldWorkout}
@@ -103,18 +121,23 @@ export default function WorkoutPage(props) {
         }
     }
 
+    function cancelNewName() {
+        setNewName(workout.name)
+        setNewNameActive(false)
+    }
+
     const workoutForms = workout.exercises.map((exercise, index) => {
         const inputs = exercise.sets.map((set, setIndex) => {
             return (
                 <div>
-                    <p>Set #{setIndex+1}</p>
+                    <p style={{"color": "#e8e9f3"}}>Set #{setIndex+1}</p>
                     <span className="workout-values">
                         <input value={set.weight} name="weight" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Weight"/>
-                        <p>lbs</p>
+                        <p style={{"color": "#e8e9f3", "marginLeft":"10px"}}>lbs</p>
                     </span>
                     <span className="workout-values">
                         <input value={set.reps} name="reps" onChange={e => handleFormChange(e, index, setIndex)} placeholder="Reps"/>
-                        <p>reps</p>
+                        <p style={{"color": "#e8e9f3", "marginLeft":"10px"}}>reps</p>
                     </span>
                 </div>
             )
@@ -129,32 +152,49 @@ export default function WorkoutPage(props) {
     const workoutBody = workout.exercises.map((exercise, index) => {
         return(
             <div>
-                <h2>{exercise.name}</h2>
-                <p>numSets: {exercise.sets.length}</p>
-                <button onClick={e => addSet(e, index)} className="btn">Add set</button>
+                <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
+                <h2 style={{"color": "#e8e9f3", "fontSize":"32px"}}>{exercise.name}</h2>
+                <span style={{"display":"flex", "justifyContent":"center", "gap":"25px"}}>
+                    <button onClick={e => addSet(e, index)} className="btn">Add set</button>
+                    <button onClick={e => deleteSet(e, index)} className='btn'>Delete last set</button>
+                    <button onClick={e => deleteExercise(e, index)} className='btn'>Remove Exercise</button>
+                </span>
                 {workoutForms[index]}
             </div>
         )
     })
 
     return (
-        <div>
+        <div style={{"marginBottom":"25px"}}>
             <span>
                 {
                     newNameActive && (
-                        <>
+                        <div style={{"display":"flex", "justifyContent":"center", "flexDirection":"column", "alignItems":"center", "marginTop":"20px"}}>
                             <input type="text" value={newName} onChange={e => handleFormChange(e, 0)} name="newName"/>
-                            <button onClick={saveNewName} className="btn">Save new name</button>
-                        </>
+                            <span style={{"display":"flex", "justifyContent":"center", "gap":"25px"}}>
+                                <button onClick={cancelNewName} className='btn'>Cancel</button>
+                                <button onClick={saveNewName} className="btn">Save new name</button>
+                            </span>
+                        </div>
                     )
                 }
-                {!newNameActive && 
-                    (<><h1>{workout.name}</h1>
-                    <button onClick={() => setNewNameActive(true)} className="btn">Edit name of workout</button></>)
+                {
+                    !newNameActive && 
+                        (
+                            <div style={{"display": "flex", "flexDirection":"column", "gap":"25px", "justifyContent":"center", "alignItems":"center", "marginTop":"20px"}}>
+                                <h1 style={{"color": "#e8e9f3", "fontSize":"50px", "textAlign":"center"}}>{workout.name}</h1>
+                                <button onClick={() => setNewNameActive(true)} className="btn">Edit name of workout</button>
+                            </div>
+                        )
                 }
+                <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
             </span>
-            <button onClick={() => toggleNewExerciseActive()} className="btn">Add an exercise</button>
-            <button onClick={() => cancelWorkout()} className="btn">Cancel workout</button>
+            
+            <span style={{"display":"flex", "gap":"25px", "justifyContent":"center"}}>
+                <button onClick={() => toggleNewExerciseActive()} className="btn">Add an exercise</button>
+                <button onClick={() => cancelWorkout()} className="btn">Cancel workout</button>
+            </span>
+            
             {
                 newExerciseActive && 
                 <form onSubmit={addExercise}>
@@ -163,7 +203,7 @@ export default function WorkoutPage(props) {
                     <button type="button" onClick={toggleNewExerciseActive} className="btn">Cancel</button>
                 </form>
             }
-            <form onSubmit={(e) => finishWorkout(e)}>
+            <form onSubmit={(e) => finishWorkout(e)} style={{"border":"none"}}>
                 {workoutBody}
                 <button className="btn">Finish workout</button>
             </form>

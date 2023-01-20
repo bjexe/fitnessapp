@@ -59,7 +59,6 @@ export default function Home() {
         getPastWorkouts()
     }, [])
 
-    // functions for creating a workout template
     function openTemplateModal() {
         setShowModal(true)
     }
@@ -136,7 +135,6 @@ export default function Home() {
         })
     }
 
-    //functions for starting workouts
     function openWorkoutTemplateModal() {
         setShowTemplatesModal(true)
     }
@@ -278,7 +276,6 @@ export default function Home() {
                 })
             }
         } else {
-            // compile form from template id and display it on modal
             setTemplateFormData(templates.find(template => template.id === name))
             setTemplateEditActive(true)
         }
@@ -398,7 +395,7 @@ export default function Home() {
                                 <input name="templateName" placeholder="Name of template" value = {templateFormData.name} onChange={handleFormChange}/>
                                 <button type="button" onClick={addExercise} className="btn">Add an exercise</button>
                                 {formInputs}
-                                <button className="btn">Save template</button>
+                                <button className="btn-purple">Save template</button>
                             </form>
                         </div>   
                     </Modal>
@@ -469,7 +466,6 @@ export default function Home() {
                     <Modal
                         isOpen={showTemplatesModal}
                         onRequestClose={closeWorkoutTemplateModal}
-                        // onAfterOpen={getTemplates}
                         style={modalStyles}
                         contentLabel = "create a new template"
                     >
@@ -484,6 +480,7 @@ export default function Home() {
                 <h1 className='recent-workouts-header'>Recent Workouts</h1>
                 
                 <div className='recent-workouts'>
+                    {/* {recentWorkouts.length > 1 && <CsvDownloadButton data={recentWorkouts} filename="workout_history.csv" className='btn'>Export workout history as csv</CsvDownloadButton>} */}
                     {recentWorkouts.length ? recentWorkouts : <h2 style={{"color": "#e8e9f3"}}>No workouts yet</h2>}
                 </div>
 
