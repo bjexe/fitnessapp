@@ -25,7 +25,7 @@ export default function WorkoutPage(props) {
         setWorkout((oldWorkout) => {
             return {...oldWorkout, startDate: new Date()}
         })
-    }, [])
+    }, [workout.name])
 
     function cancelWorkout() {
         workoutContext.clearWorkout()
@@ -34,7 +34,7 @@ export default function WorkoutPage(props) {
 
     async function finishWorkout(event) {
         event.preventDefault()
-        const res = await comms.createWorkout(workout)
+        await comms.createWorkout(workout)
         workoutContext.clearWorkout()
         navigate('/home')
     }

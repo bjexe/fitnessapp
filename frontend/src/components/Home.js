@@ -114,6 +114,15 @@ export default function Home() {
         })
     }
 
+    function deleteExercise(event, index) {
+        event.preventDefault()
+        setTemplateFormData(oldForm => {
+            let newForm = {...oldForm}
+            newForm.exercises.splice(index, 1)
+            return newForm
+        })
+    }
+
     function addSet(event, index) {
         event.preventDefault()
         setTemplateFormData(oldForm => {
@@ -322,6 +331,7 @@ export default function Home() {
                 <span style={{"display":"flex", "gap": "32px", "justifyContent": "center"}}>
                     <button className="btn" onClick={(e) => addSet(e, index)}>Add set</button>
                     <button className='btn' onClick={e => deleteSet(e, index)}>Delete last set</button>
+                    <button className='btn' onClick={e => deleteExercise(e, index)}>Delete exercise</button>
                 </span>
                 {sets}
             </div>
