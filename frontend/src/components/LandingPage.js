@@ -85,7 +85,7 @@ export default function LandingPage() {
     return (
         <div className='landing-page'>
             <div className="content">
-                <div className="headerContainer">
+                <div style={{"marginTop":"50px"}}>
                     <h1 className='header'>
                         Yacked Fitness Tracker
                     </h1>
