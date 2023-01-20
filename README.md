@@ -1,4 +1,4 @@
-# Weighlifting tracking web app built with React, Express, and MongoDB
+# Weighlifting tracking web app built with React, Express, and MongoDB :muscle:
 
 ## Features
 - Create, edit, and delete workout templates to log commonly used routines at the click of a button
@@ -7,4 +7,11 @@
 - View historical workouts with a synopsis of exercises (csv export planned)
 
 ## Demo
-[gifs go here]
+### Creating a template:
+![]
+### Managing templates:
+![]
+### Starting and completing a workout:
+![]
+### Exporting weight history (only shown with >= 2 weight entries):
+![]
