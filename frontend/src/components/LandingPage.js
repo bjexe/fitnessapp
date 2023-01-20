@@ -87,7 +87,7 @@ export default function LandingPage() {
             <div className="content">
                 <div className="headerContainer">
                     <h1 className='header'>
-                        Yacked
+                        Yacked Fitness Tracker
                     </h1>
                 </div>
                 <div className="forms">
