@@ -10,8 +10,11 @@
 ### Creating a template:
 ![]
 ### Managing templates:
+- Editing a template:
 ![]
-### Starting and completing a workout:
+- Deleting a template:
+![]
+### Workouts:
 ![]
 ### Exporting weight history (only shown with >= 2 weight entries):
 ![]
