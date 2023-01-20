@@ -1,7 +1,10 @@
-# Fitness web app I am working on with React, Node, and MongoDB
+# Weighlifting tracking web app built with React, Express, and MongoDB
 
-Planned features include:
+## Features
+- Create, edit, and delete workout templates to log commonly used routines at the click of a button
+- Starting workouts from scratch or from template
+- Log weight progress with an option to export weight history as a csv file (semicolon delimited)
+- View historical workouts with a synopsis of exercises (csv export planned)
 
-- Starting workouts and saving them to an account for tracking
-- Creating template workouts to start workout routines at the click of a button
-- Tracking weight
+## Demo
+[gifs go here]
