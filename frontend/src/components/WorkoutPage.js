@@ -40,8 +40,6 @@ export default function WorkoutPage(props) {
             const template = await comms.getTemplate(workout.id)
             let purgedWorkout = workout
             delete purgedWorkout.startDate
-            console.log(`found template: ${JSON.stringify(template, null, 2)}`)
-            console.log(`comparing template to: ${JSON.stringify(purgedWorkout, null, 2)}`)
             if(isEqual(workout, template)){
                 await comms.createWorkout(workout)
                 workoutContext.clearWorkout()

@@ -51,7 +51,6 @@ templatesRouter.get(`/user`, async (request, response) => {
 
 // getting a specific template by id
 templatesRouter.get(`/:id`, (request, response) => {
-    console.log(request.params.id)
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
     if(!decodedToken.id){
