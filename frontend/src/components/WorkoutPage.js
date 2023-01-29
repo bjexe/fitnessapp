@@ -3,6 +3,7 @@ import { useWorkout } from '../context/WorkoutContext'
 import { useNavigate } from 'react-router-dom'
 import comms from '../services/comms'
 import './WorkoutPage.css'
+import { isEqual } from 'lodash'
 
 export default function WorkoutPage(props) {
 
@@ -14,6 +15,7 @@ export default function WorkoutPage(props) {
     const [newExerciseActive, setNewExerciseActive] = React.useState(false)
     const [newName, setNewName] = React.useState(workout.name)
     const [newNameActive, setNewNameActive] = React.useState(false)
+    const [finishedWorkout, setFinishedWorkout] = React.useState(false) 
     
     React.useEffect(() => {
         if(!workout.name){ 
@@ -34,8 +36,43 @@ export default function WorkoutPage(props) {
 
     async function finishWorkout(event) {
         event.preventDefault()
+        if(workout.id) {
+            const template = await comms.getTemplate(workout.id)
+            let purgedWorkout = workout
+            delete purgedWorkout.startDate
+            console.log(`found template: ${JSON.stringify(template, null, 2)}`)
+            console.log(`comparing template to: ${JSON.stringify(purgedWorkout, null, 2)}`)
+            if(isEqual(workout, template)){
+                await comms.createWorkout(workout)
+                workoutContext.clearWorkout()
+                navigate('/home')
+            } else {
+                setFinishedWorkout(true)
+            }
+        } else {
+            setFinishedWorkout(true)
+        }
+    }
+
+    async function submitWorkoutAndUpdateTemplate(event){
+        event.preventDefault()
+        await comms.createWorkout(workout)
+        await comms.updateTemplate(workout.id, workout)
+        workoutContext.clearWorkout()
+        navigate('/home')
+    }
+
+    async function submitWorkout(event) {
+        event.preventDefault()
         await comms.createWorkout(workout)
         workoutContext.clearWorkout()
+        navigate('/home')
+    }
+
+    async function submitWorkoutAndCreateTemplate(event) {
+        event.preventDefault()
+        await comms.createWorkout(workout)
+        await comms.createTemplate(workout)
         navigate('/home')
     }
 
@@ -166,47 +203,76 @@ export default function WorkoutPage(props) {
 
     return (
         <div style={{"marginBottom":"25px"}}>
-            <span>
-                {
-                    newNameActive && (
-                        <div style={{"display":"flex", "justifyContent":"center", "flexDirection":"column", "alignItems":"center", "marginTop":"20px"}}>
-                            <input type="text" value={newName} onChange={e => handleFormChange(e, 0)} name="newName"/>
-                            <span style={{"display":"flex", "justifyContent":"center", "gap":"25px"}}>
-                                <button onClick={cancelNewName} className='btn'>Cancel</button>
-                                <button onClick={saveNewName} className="btn">Save new name</button>
-                            </span>
-                        </div>
-                    )
-                }
-                {
-                    !newNameActive && 
-                        (
-                            <div style={{"display": "flex", "flexDirection":"column", "gap":"25px", "justifyContent":"center", "alignItems":"center", "marginTop":"20px"}}>
-                                <h1 style={{"color": "#e8e9f3", "fontSize":"50px", "textAlign":"center"}}>{workout.name}</h1>
-                                <button onClick={() => setNewNameActive(true)} className="btn">Edit name of workout</button>
-                            </div>
-                        )
-                }
-                <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
-            </span>
-            
-            <span style={{"display":"flex", "gap":"25px", "justifyContent":"center"}}>
-                <button onClick={() => toggleNewExerciseActive()} className="btn">Add an exercise</button>
-                <button onClick={() => cancelWorkout()} className="btn">Cancel workout</button>
-            </span>
-            
+            {!finishedWorkout && (
+                <>
+                    <span>
+                        {
+                            newNameActive && (
+                                <div style={{"display":"flex", "justifyContent":"center", "flexDirection":"column", "alignItems":"center", "marginTop":"20px"}}>
+                                    <input type="text" value={newName} onChange={e => handleFormChange(e, 0)} name="newName"/>
+                                    <span style={{"display":"flex", "justifyContent":"center", "gap":"25px"}}>
+                                        <button onClick={cancelNewName} className='btn'>Cancel</button>
+                                        <button onClick={saveNewName} className="btn">Save new name</button>
+                                    </span>
+                                </div>
+                            )
+                        }
+                        {
+                            !newNameActive && 
+                                (
+                                    <div style={{"display": "flex", "flexDirection":"column", "gap":"25px", "justifyContent":"center", "alignItems":"center", "marginTop":"20px"}}>
+                                        <h1 style={{"color": "#e8e9f3", "fontSize":"50px", "textAlign":"center"}}>{workout.name}</h1>
+                                        <button onClick={() => setNewNameActive(true)} className="btn">Edit name of workout</button>
+                                    </div>
+                                )
+                        }
+                        <hr style={{"color": "#e8e9f3", "width": "auto", "backgroundColor": "#e8e9f3"}}/>
+                    </span>
+                    
+                    <span style={{"display":"flex", "gap":"25px", "justifyContent":"center"}}>
+                        <button onClick={() => toggleNewExerciseActive()} className="btn">Add an exercise</button>
+                        <button onClick={() => cancelWorkout()} className="btn">Cancel workout</button>
+                    </span>
+                    
+                    {
+                        newExerciseActive && 
+                        <form onSubmit={addExercise}>
+                            <input name="newExercise" value={newExercise} onChange={handleFormChange} placeholder={"Name of new exercise"}/>
+                            <button className="btn">Add exercise to workout</button>
+                            <button type="button" onClick={toggleNewExerciseActive} className="btn">Cancel</button>
+                        </form>
+                    }
+                    <form onSubmit={(e) => finishWorkout(e)} style={{"border":"none"}}>
+                        {workoutBody}
+                        <button className="btn">Finish workout</button>
+                    </form>
+                </>
+            )}
+
             {
-                newExerciseActive && 
-                <form onSubmit={addExercise}>
-                    <input name="newExercise" value={newExercise} onChange={handleFormChange} placeholder={"Name of new exercise"}/>
-                    <button className="btn">Add exercise to workout</button>
-                    <button type="button" onClick={toggleNewExerciseActive} className="btn">Cancel</button>
-                </form>
+                finishedWorkout && workout.id && 
+                <div style={{"display":"flex", "flexDirection":"column", "paddingBottom":"20px", "justifyContent":"Center", "alignItems":"center"}}>
+                    <h1 style={{"color": "#e8e9f3", "fontSize":"40px", "textAlign":"center", "marginTop":"40px"}}>Would you like to update your {workout.name} template with the current body of this workout?</h1>
+                    <span style={{"display":"flex", "justifyContent": "center", "gap":"20px"}}>
+                        <button className="btn" onClick={e => submitWorkoutAndUpdateTemplate(e)}>Yes</button>
+                        <button className="btn" onClick={e => submitWorkout(e)}>No</button>
+                        <button className="btn" onClick={e => setFinishedWorkout(false)}>Cancel</button>
+                    </span>
+                </div>
             }
-            <form onSubmit={(e) => finishWorkout(e)} style={{"border":"none"}}>
-                {workoutBody}
-                <button className="btn">Finish workout</button>
-            </form>
+
+            {
+                finishedWorkout && !workout.id &&
+                <div style={{"display":"flex", "flexDirection":"column", "paddingBottom":"20px", "justifyContent":"Center", "alignItems":"center"}}>
+                    <h1 style={{"color": "#e8e9f3", "fontSize":"40px", "textAlign":"center", "marginTop":"40px"}}>Would you like to create a template with the body and name of this workout?</h1>
+                    <span style={{"display":"flex", "justifyContent": "center", "gap":"20px"}}>
+                        <button className="btn" onClick={e => submitWorkoutAndCreateTemplate(e)}>Yes</button>
+                        <button className="btn" onClick={e => submitWorkout(e)}>No</button>
+                        <button className="btn" onClick={e => setFinishedWorkout(false)}>Cancel</button>
+                    </span>
+                </div>
+            }
+            
         </div>
     )
 }

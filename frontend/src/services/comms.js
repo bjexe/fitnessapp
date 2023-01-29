@@ -58,6 +58,14 @@ async function getAllUserTemplates() {
     return request.then(response => response.data)
 }
 
+async function getTemplate(id) {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = axios.get(`${templateBaseUrl}/${id}`, config)
+    return request.then(response => response.data)
+}
+
 async function createTemplate(template) {
     const config = {
         headers: {Authorization: token}
@@ -123,6 +131,7 @@ const exports = {
     setToken,
     printToken,
     getAllUserTemplates,
+    getTemplate,
     createTemplate,
     updateTemplate,
     deleteTemplate,

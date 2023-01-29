@@ -10,20 +10,6 @@ templatesRouter.get(`/`, async (request, response) => {
     response.json(templates)
 })
 
-// getting a specific template by id
-// templatesRouter.get(`/:id`, (request, response) => {
-//     Template.findById(request.params.id).then(template => {
-//         if(template) {
-//             response.json(template)
-//         } else {
-//             response.status(404).end()
-//         }
-//     }).catch(error => {
-//         console.log(err)
-//         response.status(400).send({error: "malformatted id"})
-//     })
-// })
-
 // delete a template by id
 templatesRouter.delete(`/:id`, async (request, response) => {
     const templateId = request.params.id
@@ -61,6 +47,26 @@ templatesRouter.get(`/user`, async (request, response) => {
         }
     })
     response.json(templates)
+})
+
+// getting a specific template by id
+templatesRouter.get(`/:id`, (request, response) => {
+    console.log(request.params.id)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!decodedToken.id){
+        return response.status(401).json({error: "token is missing or invalid"})
+    }
+    Template.findById(request.params.id).then(template => {
+        if(template) {
+            response.json(template)
+        } else {
+            response.status(404).end()
+        }
+    }).catch(error => {
+        console.log(error)
+        response.status(400).send({error: "malformatted id"})
+    })
 })
 
 // update a template by id
